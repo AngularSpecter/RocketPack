@@ -4,13 +4,17 @@
 
 void UART_init(void)
 {
-  /* Set UART0 to alternate (UART) mode */  
+  /* Set UART0 to alternate 2 (UART) mode */  
   PERCFG |= BV(0);
-  
+ 
   /*Give the UART priority on the pins */
-  P1DIR |= BV(5);
-  P1SEL |= BV(4)|BV(5);
+  //P1.4 = RX
+  //P1.5 = TX
+
+  P1DIR |= BV(5);        //TX pin as output
+  P1SEL |= BV(4)|BV(5);  //Set pins as special mode
    
+  
   /*UART Mode */
   U0CSR |= BV(7);
   
@@ -23,7 +27,14 @@ void UART_init(void)
   U0GCR |= E;  //BAUD_E
   U0BAUD |= M; //BAUD_M  
   
-  //U0GCR |= BV(5);
+  //U0GCR |= BV(5);  //Set to MSB first
+  
+  //U0CSR &= ~BV(2);  //Clear the buffer
+  U0UCR |= BV(7);   //Flush the UART
+  
+  ENABLE_RX();   //Start the receiver
+  
+  IEN0 |= BV(2);    //Enable interrupt
 }
 
 
@@ -58,6 +69,17 @@ void flushByte(uint8* txbuffer)
     while(U0CSR & BV(0));                        //wait until tx is finished
 }
 
+void send_ACK(void)
+{
+  U0DBUF = 0xff;
+  while(U0CSR & BV(0)); 
+}
+
+void send_NACK(void)
+{
+  U0DBUF = 0x00;
+  while(U0CSR & BV(0)); 
+}
   
 void uartSend(char *pucData, unsigned char ucLength) 
 {
@@ -78,12 +100,24 @@ void uartSend(char *pucData, unsigned char ucLength)
   while(U0CSR & BV(0));  
 }
 
-void uart_send_data(uint16 *buffer, uint8 len)
+void uart_send_data(uint16 data)
 {
   
     char *output_buffer;
     unsigned char buff_len = 6;
-    uint8 i;
+    
+    itoa(data, output_buffer, 65535);
+    uartSend(output_buffer,buff_len);
+       
+    U0DBUF = '\r';
+    U0DBUF = '\n';   
+}
+
+void uart_send_buffer(uint16 *buffer, uint8 len)
+{
+  
+    char *output_buffer;
+    unsigned char buff_len = 6;
     
     while(len--)
     {

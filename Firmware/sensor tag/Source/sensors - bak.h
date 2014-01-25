@@ -3,14 +3,14 @@
 #include <hal_board_cfg.h>
 #include <hal_i2c.h>
 #include <hal_sensor.h>
-#include "uart.h"
+
 
 
 void sensors_init(void);
 void sensor_int_init(void);
 void start_interrupts(uint8 mask);
 void stop_interrupts(uint8 mask);
-bool read_sensor(uint8 device);
+
 
 #define GYRO_INT        BV(1)
 #define ACC_INT         BV(2)
@@ -139,8 +139,11 @@ bool read_sensor(uint8 device);
 #define GYRO_PWR_MGM_CLOCK_STOP             0x07
 
 void start_gyro(void);
-void read_gyro(void);
-void read_gyro_temp(void);
+void read_gyro(uint16 *buffer);
+void read_gyro_temp(uint16 *buffer);
+uint8 gyro_int_status(void);
+void gyro_sleep(bool sleep);
+void zero_gyro(void);
 
 
 /*------------------------------------------------------------------------------
@@ -259,9 +262,9 @@ Accelerometer
 #define ACC_SELF_TEST                           0x3A
 
 void init_acc(void);
-//void acc_int_mode(bool interrupt);
-//void acc_sleep(bool sleep);
-void read_acc(void);
+void acc_int_mode(bool interrupt);
+void acc_sleep(bool sleep);
+void read_acc(uint16 *buffer);
 
 
 /*------------------------------------------------------------------------------
@@ -357,10 +360,10 @@ Magnetometer
 
 
 void start_mag(void);
-//void mag_sleep(bool sleep);
-void read_mag(void);
-//void zero_mag(void);
-//uint8 mag_status(void);
+void mag_sleep(bool sleep);
+void read_mag(uint16 *buffer);
+void zero_mag(void);
+uint8 mag_status(void);
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -435,10 +438,10 @@ Barometer
 
 void start_baro(void);
 uint16 baro_capture_press(uint8 resolution);
-void baro_read_press(void);
+void baro_read_press(uint16 *buffer);
 uint16 baro_capture_temp(uint8 resolution);
-void baro_read_temp(void);
-//void baro_shutdown(void);
+void baro_read_temp(uint16 *buffer);
+void baro_shutdown(void);
 
 
 /*------------------------------------------------------------------------------
@@ -485,6 +488,55 @@ Humidity
 */
 
 void humid_init(void);
-void humid_read_humidity(void);
+uint8 humid_read_humidity(void);
 static bool HumidWriteCmd(uint8 cmd);
 static bool HumidReadData(uint8 *pBuf, uint8 nBytes);
+
+
+
+/****************************************************************************
+  IR Temperature
+*****************************************************************************/
+/* Slave address */
+#define TMP006_I2C_ADDRESS              0x44
+
+/* TMP006 register addresses */
+#define TMP006_VOLTAGE         0x00
+#define TMP006_TEMPERATURE     0x01
+#define TMP006_CONFIG          0x02
+#define TMP006_MANF_ID              0xFE
+#define TMP006_PROD_ID              0xFE
+
+/* TMP006 register values */
+#define TMP006_VAL_CONFIG_RESET         0x7400  // Sensor reset state
+#define TMP006_VAL_CONFIG_ON            0x7000  // Sensor on state
+#define TMP006_VAL_CONFIG_OFF           0x0000  // Sensor off state
+#define TMP006_VAL_MANF_ID              0x5449  // Manufacturer ID
+#define TMP006_VAL_PROD_ID              0x0067  // Product ID
+
+/*Config register bitmasks */
+#define TMP006_MSB_RESET                0x80
+#define TMP006_MSB_POWER_ON             0x70
+
+#define TMP006_MSB_CONV_MASK            0x0E  // Bitmask for conversion
+#define TMP006_MSB_CONV_1               0x00  // .25 s
+#define TMP006_MSB_CONV_2               0x02  // .50 s
+#define TMP006_MSB_CONV_4               0x04  // 1   s
+#define TMP006_MSB_CONV_8               0x06  // 2   s
+#define TMP006_MSB_CONV_16              0x08  // 4   s
+
+#define TMP006_MSB_DRDY_ENABLE          0x01
+
+
+/* Bit values */
+#define DATA_RDY_BIT                    0x8000 // Data ready
+
+/* Register length */
+#define IRTEMP_REG_LEN                  2
+
+
+void IR_on(void);
+void IR_off(void);
+void read_IR(uint16 *buffer);
+void IR_keepalive(bool keepalive);
+bool IR_data_ready(void);

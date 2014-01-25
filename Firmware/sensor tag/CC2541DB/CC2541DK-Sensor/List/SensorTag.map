@@ -2,7 +2,7 @@
 #                                                                              #
 #      IAR Universal Linker V5.7.0.39                                          #
 #                                                                              #
-#           Link time     =  16/Jan/2014  22:25:40                             #
+#           Link time     =  21/Jan/2014  15:23:23                             #
 #           Target CPU    =  x51                                               #
 #           List file     =  "D:\Code\GitHub\RocketPack\Firmware\sensor tag\CC #
 #                            2541DB\CC2541DK-Sensor\List\SensorTag.map"        #
@@ -314,6 +314,7 @@ SFR_AN
   Relative segment, address: DATA 00000080 - 00000080 (0x1 bytes), align: 0
   Segment part 1. ROOT.       Intra module refs:   HalSensorWriteReg (hal_sensor)
                                                    main
+                                                   sensors_init (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            _A_P0                   00000080 
@@ -322,17 +323,9 @@ SFR_AN
            P0                      00000080 
     -------------------------------------------------------------------------
 SFR_AN
-  Relative segment, address: DATA 00000086 - 00000086 (0x1 bytes), align: 0
-  Segment part 2. ROOT.       Intra module refs:   RX0_ISR
-                                                   UART_init (uart)
-                                                   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           U0CSR                   00000086 
-    -------------------------------------------------------------------------
-SFR_AN
   Relative segment, address: DATA 00000089 - 00000089 (0x1 bytes), align: 0
-  Segment part 3. ROOT.       Intra module refs:   port0_ISR
+  Segment part 2. ROOT.       Intra module refs:   main
+                                                   port0_ISR
                                                    sensor_int_init (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -340,7 +333,7 @@ SFR_AN
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 0000008F - 0000008F (0x1 bytes), align: 0
-  Segment part 4. ROOT.       Intra module refs:   main
+  Segment part 3. ROOT.       Intra module refs:   main
                                                    sensor_int_init (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -348,8 +341,11 @@ SFR_AN
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 00000090 - 00000090 (0x1 bytes), align: 0
-  Segment part 5. ROOT.       Intra module refs:   SLEEP_ISR
+  Segment part 4. ROOT.       Intra module refs:   RX0_ISR
+                                                   SLEEP_ISR
                                                    main
+                                                   sensors_init (sensors)
+                                                   start_gyro (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            _A_P1                   00000090 
@@ -359,21 +355,23 @@ SFR_AN
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 0000009D - 0000009D (0x1 bytes), align: 0
-  Segment part 6. ROOT.       Intra module refs:   main
+  Segment part 5. ROOT.       Intra module refs:   main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            SLEEPSTA                0000009D 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 0000009E - 0000009E (0x1 bytes), align: 0
-  Segment part 7. ROOT.       Intra module refs:   main
+  Segment part 6. ROOT.       Intra module refs:   main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            CLKCONSTA               0000009E 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000A8 - 000000A8 (0x1 bytes), align: 0
-  Segment part 8. ROOT.       Intra module refs:   RX0_ISR
+  Segment part 7. ROOT.       Intra module refs:   RX0_ISR
+                                                   SetSleepTimer (sleepTimer)
+                                                   UART_init (uart)
                                                    main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -383,15 +381,35 @@ SFR_AN
            IEN0                    000000A8 
     -------------------------------------------------------------------------
 SFR_AN
-  Relative segment, address: DATA 000000BE - 000000BE (0x1 bytes), align: 0
+  Relative segment, address: DATA 000000AB - 000000AB (0x1 bytes), align: 0
+  Segment part 8. ROOT.       Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           P0IEN                   000000AB 
+    -------------------------------------------------------------------------
+SFR_AN
+  Relative segment, address: DATA 000000B8 - 000000B8 (0x1 bytes), align: 0
   Segment part 9. ROOT.       Intra module refs:   main
+                                                   sensor_int_init (sensors)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_IEN1                 000000B8 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           IEN1                    000000B8 
+    -------------------------------------------------------------------------
+SFR_AN
+  Relative segment, address: DATA 000000BE - 000000BE (0x1 bytes), align: 0
+  Segment part 10. ROOT.      Intra module refs:   main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            SLEEPCMD                000000BE 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000C0 - 000000C0 (0x1 bytes), align: 0
-  Segment part 10. ROOT.      Intra module refs:   SLEEP_ISR
+  Segment part 11. ROOT.      Intra module refs:   SLEEP_ISR
+                                                   SetSleepTimer (sleepTimer)
+                                                   main
                                                    port0_ISR
                                                    sensor_int_init (sensors)
            ENTRY                   ADDRESS         REF BY
@@ -403,21 +421,30 @@ SFR_AN
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000C1 - 000000C1 (0x1 bytes), align: 0
-  Segment part 11. ROOT.      Intra module refs:   main
+  Segment part 12. ROOT.      Intra module refs:   RX0_ISR
+                                                   flushByte (uart)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            U0DBUF                  000000C1 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000C6 - 000000C6 (0x1 bytes), align: 0
-  Segment part 12. ROOT.      Intra module refs:   main
+  Segment part 13. ROOT.      Intra module refs:   main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            CLKCONCMD               000000C6 
     -------------------------------------------------------------------------
 SFR_AN
+  Relative segment, address: DATA 000000F3 - 000000F3 (0x1 bytes), align: 0
+  Segment part 14. ROOT.      Intra module refs:   main
+                                                   sensor_int_init (sensors)
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           P0SEL                   000000F3 
+    -------------------------------------------------------------------------
+SFR_AN
   Relative segment, address: DATA 000000FD - 000000FD (0x1 bytes), align: 0
-  Segment part 13. ROOT.      Intra module refs:   main
+  Segment part 15. ROOT.      Intra module refs:   main
                                                    sensor_int_init (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -425,123 +452,101 @@ SFR_AN
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000FE - 000000FE (0x1 bytes), align: 0
-  Segment part 14. ROOT.      Intra module refs:   UART_init (uart)
+  Segment part 16. ROOT.      Intra module refs:   UART_init (uart)
                                                    main
+                                                   sensors_init (sensors)
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            P1DIR                   000000FE 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000FF - 000000FF (0x1 bytes), align: 0
-  Segment part 15. ROOT.      Intra module refs:   main
+  Segment part 17. ROOT.      Intra module refs:   main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            P2DIR                   000000FF 
     -------------------------------------------------------------------------
+XDATA_I
+  Relative segment, address: XDATA 000002AB - 000002AE (0x4 bytes), align: 0
+  Segment part 26.            Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           timeout                 000002AB 
+    -------------------------------------------------------------------------
 XDATA_Z
-  Relative segment, address: XDATA 00000281 - 00000281 (0x1 bytes), align: 0
-  Segment part 26.            Intra module refs:   RX0_ISR
+  Relative segment, address: XDATA 00000281 - 00000288 (0x8 bytes), align: 0
+  Segment part 36.            Intra module refs:   RX0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           RXbuffer                00000281 
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 00000289 - 00000289 (0x1 bytes), align: 0
+  Segment part 38.            Intra module refs:   RX0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           write_pos               00000289 
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 0000028A - 0000028A (0x1 bytes), align: 0
+  Segment part 39.            Intra module refs:   RX0_ISR
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           bytes_to_proc           0000028A 
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 0000028B - 0000028B (0x1 bytes), align: 0
+  Segment part 41.            Intra module refs:   SLEEP_ISR
                                                    main
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           byte_number             00000281 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000282 - 00000282 (0x1 bytes), align: 0
-  Segment part 27.            Intra module refs:   RX0_ISR
-                                                   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           byteRX                  00000282 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000283 - 00000283 (0x1 bytes), align: 0
-  Segment part 28.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           mode                    00000283 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000284 - 00000284 (0x1 bytes), align: 0
-  Segment part 29.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           I2C_CLOCK               00000284 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000285 - 00000285 (0x1 bytes), align: 0
-  Segment part 30.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           I2C_DEVICE              00000285 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000286 - 00000286 (0x1 bytes), align: 0
-  Segment part 31.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           I2C_REGISTER            00000286 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000287 - 00000287 (0x1 bytes), align: 0
-  Segment part 32.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           N_BYTES                 00000287 
-    -------------------------------------------------------------------------
-XDATA_Z
-  Relative segment, address: XDATA 00000288 - 00000289 (0x2 bytes), align: 0
-  Segment part 33.            Intra module refs:   main
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           I2C_DATA                00000288 
+           timer_flag              0000028B 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000348 - 00000575 (0x22e bytes), align: 0
-  Segment part 34.
+  Relative segment, address: CODE 00000CDB - 00000DA8 (0xce bytes), align: 0
+  Segment part 42.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           main                    00000348        ?call_main (?cmain)
+           main                    00000CDB        ?call_main (?cmain)
                calls direct
-               ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 NEAR_CODE
-  Relative segment, address: CODE 0000030B - 0000032D (0x23 bytes), align: 0
-  Segment part 36.            Intra module refs:   RX0_ISR::??INTVEC 19
+  Relative segment, address: CODE 000003A0 - 000003F8 (0x59 bytes), align: 0
+  Segment part 44.            Intra module refs:   RX0_ISR::??INTVEC 19
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           RX0_ISR                 0000030B 
+           RX0_ISR                 000003A0 
+               interrupt function
+               ISTACK = 00000000 ( 00000007 )
+    -------------------------------------------------------------------------
+NEAR_CODE
+  Relative segment, address: CODE 000003F9 - 00000414 (0x1c bytes), align: 0
+  Segment part 45.            Intra module refs:   SLEEP_ISR::??INTVEC 43
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SLEEP_ISR               000003F9 
                interrupt function
                ISTACK = 00000000 ( 00000004 )
     -------------------------------------------------------------------------
 NEAR_CODE
-  Relative segment, address: CODE 0000032E - 00000337 (0xa bytes), align: 0
-  Segment part 37.            Intra module refs:   SLEEP_ISR::??INTVEC 43
+  Relative segment, address: CODE 00000415 - 00000424 (0x10 bytes), align: 0
+  Segment part 46.            Intra module refs:   port0_ISR::??INTVEC 107
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           SLEEP_ISR               0000032E 
-               interrupt function
-               ISTACK = 00000000 ( 00000001 )
-    -------------------------------------------------------------------------
-NEAR_CODE
-  Relative segment, address: CODE 00000338 - 00000347 (0x10 bytes), align: 0
-  Segment part 38.            Intra module refs:   port0_ISR::??INTVEC 107
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           port0_ISR               00000338 
+           port0_ISR               00000415 
                interrupt function
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 INTVEC
   Common segment, address: CODE 00000000 - 00000015 (0x16 bytes), align: 0
-  Segment part 16. ROOT.
+  Segment part 18. ROOT.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            RX0_ISR::??INTVEC 19    00000013 
     -------------------------------------------------------------------------
 INTVEC
   Common segment, address: CODE 00000000 - 0000002D (0x2e bytes), align: 0
-  Segment part 17. ROOT.
+  Segment part 19. ROOT.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            SLEEP_ISR::??INTVEC 43
@@ -549,11 +554,15 @@ INTVEC
     -------------------------------------------------------------------------
 INTVEC
   Common segment, address: CODE 00000000 - 0000006D (0x6e bytes), align: 0
-  Segment part 18. ROOT.
+  Segment part 20. ROOT.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            port0_ISR::??INTVEC 107
                                    0000006B 
+    -------------------------------------------------------------------------
+XDATA_ID
+  Relative segment, address: CODE 000000EF - 000000F2 (0x4 bytes), align: 0
+  Segment part 27.            Intra module refs:   timeout
 
     *************************************************************************
 
@@ -571,80 +580,89 @@ INTVEC
   SEGMENTS IN THE MODULE
   ======================
 XDATA_Z
-  Relative segment, address: XDATA 0000028A - 0000028A (0x1 bytes), align: 0
+  Relative segment, address: XDATA 0000028C - 0000028C (0x1 bytes), align: 0
   Segment part 6.             Intra module refs:   HalI2CInit
                                                    i2cMstStrt
            LOCAL                   ADDRESS         
            =====                   =======         
-           i2cAddr                 0000028A 
+           i2cAddr                 0000028C 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000576 - 000005C4 (0x4f bytes), align: 0
+  Relative segment, address: CODE 000008EE - 0000093C (0x4f bytes), align: 0
   Segment part 7.             Intra module refs:   i2cMstStrt::?relay
            LOCAL                   ADDRESS         
            =====                   =======         
-           i2cMstStrt              00000576 
+           i2cMstStrt              000008EE 
                XSTACK = 0000000A ( 00000000 )
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 000005C5 - 000005F6 (0x32 bytes), align: 0
+  Relative segment, address: CODE 0000093D - 0000096E (0x32 bytes), align: 0
   Segment part 9.             Intra module refs:   HalI2CInit::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CInit              000005C5 
+           HalI2CInit              0000093D 
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 000005F7 - 00000688 (0x92 bytes), align: 0
+  Relative segment, address: CODE 0000096F - 00000A00 (0x92 bytes), align: 0
   Segment part 11.            Intra module refs:   HalI2CRead::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CRead              000005F7 
+           HalI2CRead              0000096F 
                calls direct
                XSTACK = 00000000 ( 0000000A )
                ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000689 - 00000704 (0x7c bytes), align: 0
+  Relative segment, address: CODE 00000A01 - 00000A7C (0x7c bytes), align: 0
   Segment part 13.            Intra module refs:   HalI2CWrite::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CWrite             00000689 
+           HalI2CWrite             00000A01 
                calls direct
                XSTACK = 00000000 ( 00000009 )
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 000000F1 - 000000F6 (0x6 bytes), align: 0
+  Relative segment, address: CODE 000000F5 - 000000FA (0x6 bytes), align: 0
   Segment part 8.             Intra module refs:   HalI2CRead
                                                    HalI2CWrite
            LOCAL                   ADDRESS         
            =====                   =======         
-           i2cMstStrt::?relay      000000F1 
+           i2cMstStrt::?relay      000000F5 
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 000000F7 - 000000FC (0x6 bytes), align: 0
+  Relative segment, address: CODE 000000FB - 00000100 (0x6 bytes), align: 0
   Segment part 10.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CInit::?relay      000000F7        main (SensorTag_Main)
+           HalI2CInit::?relay      000000FB        baro_read_press (sensors)
+                                                   humid_init (sensors)
+                                                   humid_read_humidity (sensors)
+                                                   init_acc (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 000000FD - 00000102 (0x6 bytes), align: 0
+  Relative segment, address: CODE 00000101 - 00000106 (0x6 bytes), align: 0
   Segment part 12.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CRead::?relay      000000FD        HalSensorReadReg (hal_sensor)
-                                                   main (SensorTag_Main)
+           HalI2CRead::?relay      00000101        HalSensorReadReg (hal_sensor)
+                                                   HumidReadData (sensors)
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 00000103 - 00000108 (0x6 bytes), align: 0
+  Relative segment, address: CODE 00000107 - 0000010C (0x6 bytes), align: 0
   Segment part 14.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CWrite::?relay     00000103        HalSensorReadReg (hal_sensor)
+           HalI2CWrite::?relay     00000107        HalSensorReadReg (hal_sensor)
                                                    HalSensorWriteReg (hal_sensor)
-                                                   main (SensorTag_Main)
+                                                   HumidWriteCmd (sensors)
 
     *************************************************************************
 
@@ -654,47 +672,55 @@ BANK_RELAYS
   SEGMENTS IN THE MODULE
   ======================
 XDATA_Z
-  Relative segment, address: XDATA 0000028B - 000002A2 (0x18 bytes), align: 0
+  Relative segment, address: XDATA 0000028D - 000002A4 (0x18 bytes), align: 0
   Segment part 7.             Intra module refs:   HalSensorWriteReg
            LOCAL                   ADDRESS         
            =====                   =======         
-           buffer                  0000028B 
+           buffer                  0000028D 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 0000086C - 000008BA (0x4f bytes), align: 0
+  Relative segment, address: CODE 00000C04 - 00000C52 (0x4f bytes), align: 0
   Segment part 9.             Intra module refs:   HalSensorReadReg::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalSensorReadReg        0000086C 
+           HalSensorReadReg        00000C04 
                calls direct
                XSTACK = 00000000 ( 0000000B )
                ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 000008BB - 00000942 (0x88 bytes), align: 0
+  Relative segment, address: CODE 00000C53 - 00000CDA (0x88 bytes), align: 0
   Segment part 11.            Intra module refs:   HalSensorWriteReg::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalSensorWriteReg       000008BB 
+           HalSensorWriteReg       00000C53 
                calls direct
                XSTACK = 00000000 ( 0000000D )
                ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 00000109 - 0000010E (0x6 bytes), align: 0
+  Relative segment, address: CODE 0000010D - 00000112 (0x6 bytes), align: 0
   Segment part 10.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            HalSensorReadReg::?relay
-                                   00000109        main (SensorTag_Main)
+                                   0000010D        baro_read_press (sensors)
+                                                   humid_init (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 0000010F - 00000114 (0x6 bytes), align: 0
+  Relative segment, address: CODE 00000113 - 00000118 (0x6 bytes), align: 0
   Segment part 12.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            HalSensorWriteReg::?relay
-                                   0000010F        main (SensorTag_Main)
+                                   00000113        humid_init (sensors)
+                                                   init_acc (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
 
     *************************************************************************
 
@@ -703,44 +729,268 @@ BANK_RELAYS
 
   SEGMENTS IN THE MODULE
   ======================
-SFR_AN
-  Relative segment, address: DATA 000000AB - 000000AB (0x1 bytes), align: 0
-  Segment part 6. ROOT.
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000425 - 00000455 (0x31 bytes), align: 0
+  Segment part 19.            Intra module refs:   sensor_int_init::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           P0IEN                   000000AB 
-    -------------------------------------------------------------------------
-SFR_AN
-  Relative segment, address: DATA 000000B8 - 000000B8 (0x1 bytes), align: 0
-  Segment part 7. ROOT.       Intra module refs:   sensor_int_init
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           _A_IEN1                 000000B8 
-           LOCAL                   ADDRESS         
-           =====                   =======         
-           IEN1                    000000B8 
-    -------------------------------------------------------------------------
-SFR_AN
-  Relative segment, address: DATA 000000F3 - 000000F3 (0x1 bytes), align: 0
-  Segment part 9. ROOT.       Intra module refs:   sensor_int_init
-           ENTRY                   ADDRESS         REF BY
-           =====                   =======         ======
-           P0SEL                   000000F3 
+           sensor_int_init         00000425 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000943 - 00000973 (0x31 bytes), align: 0
-  Segment part 23.            Intra module refs:   sensor_int_init::?relay
+  Relative segment, address: CODE 00000456 - 0000045F (0xa bytes), align: 0
+  Segment part 25.            Intra module refs:   sensors_init::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           sensor_int_init         00000943 
+           sensors_init            00000456 
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000460 - 0000049A (0x3b bytes), align: 0
+  Segment part 27.            Intra module refs:   read_sensor::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_sensor             00000460 
+               calls direct
+               XSTACK = 00000000 ( 00000009 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 0000049B - 000004F7 (0x5d bytes), align: 0
+  Segment part 29.            Intra module refs:   start_gyro::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_gyro              0000049B 
+               calls direct
+               XSTACK = 00000000 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 000004F8 - 00000595 (0x9e bytes), align: 0
+  Segment part 31.            Intra module refs:   read_gyro::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_gyro               000004F8 
+               calls direct
+               XSTACK = 00000009 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000596 - 00000605 (0x70 bytes), align: 0
+  Segment part 35.            Intra module refs:   init_acc::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_acc                00000596 
+               calls direct
+               XSTACK = 00000000 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000606 - 00000693 (0x8e bytes), align: 0
+  Segment part 37.            Intra module refs:   read_acc::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_acc                00000606 
+               calls direct
+               XSTACK = 00000009 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000694 - 000006D9 (0x46 bytes), align: 0
+  Segment part 39.            Intra module refs:   start_mag::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_mag               00000694 
+               calls direct
+               XSTACK = 00000000 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 000006DA - 00000767 (0x8e bytes), align: 0
+  Segment part 41.            Intra module refs:   read_mag::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_mag                000006DA 
+               calls direct
+               XSTACK = 00000009 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000768 - 00000798 (0x31 bytes), align: 0
+  Segment part 43.            Intra module refs:   start_baro::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_baro              00000768 
+               calls direct
+               XSTACK = 00000000 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000799 - 000007DA (0x42 bytes), align: 0
+  Segment part 47.            Intra module refs:   baro_read_press::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           baro_read_press         00000799 
+               calls direct
+               XSTACK = 00000009 ( 00000001 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 000002A5 - 000002A5 (0x1 bytes), align: 0
+  Segment part 17.            Intra module refs:   humid_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           humid_resolution        000002A5 
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 000002A6 - 000002A6 (0x1 bytes), align: 0
+  Segment part 18.            Intra module refs:   humid_init
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           humid_usr               000002A6 
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 000007DB - 00000816 (0x3c bytes), align: 0
+  Segment part 55.            Intra module refs:   humid_init::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           humid_init              000007DB 
+               calls direct
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000817 - 00000894 (0x7e bytes), align: 0
+  Segment part 57.            Intra module refs:   humid_read_humidity::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           humid_read_humidity     00000817 
+               calls direct
+               XSTACK = 00000009 ( 00000006 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000895 - 000008C9 (0x35 bytes), align: 0
+  Segment part 59.            Intra module refs:   HumidWriteCmd::?relay
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           HumidWriteCmd           00000895 
+               calls direct
+               XSTACK = 00000006 ( 00000001 )
+               ISTACK = 00000000 ( 00000003 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 000008CA - 000008ED (0x24 bytes), align: 0
+  Segment part 61.            Intra module refs:   HumidReadData::?relay
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           HumidReadData           000008CA 
+               calls direct
+               XSTACK = 00000006 ( 00000009 )
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 00000115 - 0000011A (0x6 bytes), align: 0
-  Segment part 24.
+  Relative segment, address: CODE 00000119 - 0000011E (0x6 bytes), align: 0
+  Segment part 20.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            sensor_int_init::?relay
-                                   00000115        main (SensorTag_Main)
+                                   00000119        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000011F - 00000124 (0x6 bytes), align: 0
+  Segment part 26.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sensors_init::?relay    0000011F        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000125 - 0000012A (0x6 bytes), align: 0
+  Segment part 28.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_sensor::?relay     00000125        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000012B - 00000130 (0x6 bytes), align: 0
+  Segment part 30.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_gyro::?relay      0000012B        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000131 - 00000136 (0x6 bytes), align: 0
+  Segment part 32.            Intra module refs:   read_sensor
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_gyro::?relay       00000131 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000137 - 0000013C (0x6 bytes), align: 0
+  Segment part 36.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_acc::?relay        00000137        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000013D - 00000142 (0x6 bytes), align: 0
+  Segment part 38.            Intra module refs:   read_sensor
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_acc::?relay        0000013D 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000143 - 00000148 (0x6 bytes), align: 0
+  Segment part 40.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_mag::?relay       00000143        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000149 - 0000014E (0x6 bytes), align: 0
+  Segment part 42.            Intra module refs:   read_sensor
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           read_mag::?relay        00000149 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000014F - 00000154 (0x6 bytes), align: 0
+  Segment part 44.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           start_baro::?relay      0000014F        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000155 - 0000015A (0x6 bytes), align: 0
+  Segment part 48.            Intra module refs:   read_sensor
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           baro_read_press::?relay
+                                   00000155 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000015B - 00000160 (0x6 bytes), align: 0
+  Segment part 56.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           humid_init::?relay      0000015B        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000161 - 00000166 (0x6 bytes), align: 0
+  Segment part 58.            Intra module refs:   read_sensor
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           humid_read_humidity::?relay
+                                   00000161 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000167 - 0000016C (0x6 bytes), align: 0
+  Segment part 60.            Intra module refs:   humid_read_humidity
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           HumidWriteCmd::?relay   00000167 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000016D - 00000172 (0x6 bytes), align: 0
+  Segment part 62.            Intra module refs:   humid_read_humidity
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           HumidReadData::?relay   0000016D 
 
     *************************************************************************
 
@@ -751,24 +1001,67 @@ BANK_RELAYS
   ======================
 SFR_AN
   Relative segment, address: DATA 00000095 - 00000095 (0x1 bytes), align: 0
-  Segment part 1. ROOT.
+  Segment part 1. ROOT.       Intra module refs:   SetSleepTimer
+                                                   SleepReadTimer
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ST0                     00000095 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 00000096 - 00000096 (0x1 bytes), align: 0
-  Segment part 2. ROOT.
+  Segment part 2. ROOT.       Intra module refs:   SetSleepTimer
+                                                   SleepReadTimer
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ST1                     00000096 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 00000097 - 00000097 (0x1 bytes), align: 0
-  Segment part 3. ROOT.
+  Segment part 3. ROOT.       Intra module refs:   SetSleepTimer
+                                                   SleepReadTimer
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ST2                     00000097 
+    -------------------------------------------------------------------------
+XDATA_Z
+  Relative segment, address: XDATA 000002A7 - 000002AA (0x4 bytes), align: 0
+  Segment part 11.            Intra module refs:   SleepReadTimer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sleepTimer              000002A7 
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000DA9 - 00000DFA (0x52 bytes), align: 0
+  Segment part 12.            Intra module refs:   SetSleepTimer::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SetSleepTimer           00000DA9 
+               calls direct
+               XSTACK = 00000000 ( 00000010 )
+    -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000DFB - 00000E23 (0x29 bytes), align: 0
+  Segment part 14.            Intra module refs:   SleepReadTimer::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SleepReadTimer          00000DFB 
+               XSTACK = 00000010 ( 00000000 )
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000173 - 00000178 (0x6 bytes), align: 0
+  Segment part 13.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SetSleepTimer::?relay   00000173        main (SensorTag_Main)
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 00000179 - 0000017E (0x6 bytes), align: 0
+  Segment part 15.            Intra module refs:   SetSleepTimer
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           SleepReadTimer::?relay
+                                   00000179 
 
     *************************************************************************
 
@@ -778,74 +1071,108 @@ SFR_AN
   SEGMENTS IN THE MODULE
   ======================
 SFR_AN
+  Relative segment, address: DATA 00000086 - 00000086 (0x1 bytes), align: 0
+  Segment part 1. ROOT.       Intra module refs:   UART_init
+                                                   flushByte
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           U0CSR                   00000086 
+    -------------------------------------------------------------------------
+SFR_AN
   Relative segment, address: DATA 000000C2 - 000000C2 (0x1 bytes), align: 0
-  Segment part 3. ROOT.       Intra module refs:   UART_init
+  Segment part 4. ROOT.       Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            U0BAUD                  000000C2 
     -------------------------------------------------------------------------
 SFR_AN
+  Relative segment, address: DATA 000000C4 - 000000C4 (0x1 bytes), align: 0
+  Segment part 5. ROOT.       Intra module refs:   UART_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           U0UCR                   000000C4 
+    -------------------------------------------------------------------------
+SFR_AN
   Relative segment, address: DATA 000000C5 - 000000C5 (0x1 bytes), align: 0
-  Segment part 4. ROOT.       Intra module refs:   UART_init
+  Segment part 6. ROOT.       Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            U0GCR                   000000C5 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000F1 - 000000F1 (0x1 bytes), align: 0
-  Segment part 5. ROOT.       Intra module refs:   UART_init
+  Segment part 7. ROOT.       Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            PERCFG                  000000F1 
     -------------------------------------------------------------------------
 SFR_AN
   Relative segment, address: DATA 000000F4 - 000000F4 (0x1 bytes), align: 0
-  Segment part 6. ROOT.       Intra module refs:   UART_init
+  Segment part 8. ROOT.       Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            P1SEL                   000000F4 
     -------------------------------------------------------------------------
 XDATA_I
-  Relative segment, address: XDATA 000002A3 - 000002A4 (0x2 bytes), align: 0
-  Segment part 13.            Intra module refs:   UART_init
+  Relative segment, address: XDATA 000002AF - 000002B0 (0x2 bytes), align: 0
+  Segment part 15.            Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           BAUD_RATE               000002A3 
+           BAUD_RATE               000002AF 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000705 - 00000757 (0x53 bytes), align: 0
-  Segment part 15.            Intra module refs:   UART_init::?relay
+  Relative segment, address: CODE 00000A7D - 00000AD7 (0x5b bytes), align: 0
+  Segment part 17.            Intra module refs:   UART_init::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           UART_init               00000705 
+           UART_init               00000A7D 
                calls direct
                XSTACK = 00000000 ( 0000000E )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000758 - 0000086B (0x114 bytes), align: 0
-  Segment part 17.            Intra module refs:   calcBAUD::?relay
+  Relative segment, address: CODE 00000AD8 - 00000BEB (0x114 bytes), align: 0
+  Segment part 19.            Intra module refs:   calcBAUD::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           calcBAUD                00000758 
+           calcBAUD                00000AD8 
                XSTACK = 0000000E ( 0000000A )
     -------------------------------------------------------------------------
+<BANKED_CODE> 1 (was BANKED_CODE)
+  Relative segment, address: CODE 00000BEC - 00000C03 (0x18 bytes), align: 0
+  Segment part 23.            Intra module refs:   flushByte::?relay
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           flushByte               00000BEC 
+               ISTACK = 00000000 ( 00000002 )
+    -------------------------------------------------------------------------
 XDATA_ID
-  Relative segment, address: CODE 000000EF - 000000F0 (0x2 bytes), align: 0
-  Segment part 14.            Intra module refs:   BAUD_RATE
+  Relative segment, address: CODE 000000F3 - 000000F4 (0x2 bytes), align: 0
+  Segment part 16.            Intra module refs:   BAUD_RATE
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 0000011B - 00000120 (0x6 bytes), align: 0
-  Segment part 16.
+  Relative segment, address: CODE 0000017F - 00000184 (0x6 bytes), align: 0
+  Segment part 18.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           UART_init::?relay       0000011B        main (SensorTag_Main)
+           UART_init::?relay       0000017F        main (SensorTag_Main)
     -------------------------------------------------------------------------
 BANK_RELAYS
-  Relative segment, address: CODE 00000121 - 00000126 (0x6 bytes), align: 0
-  Segment part 18.            Intra module refs:   UART_init
+  Relative segment, address: CODE 00000185 - 0000018A (0x6 bytes), align: 0
+  Segment part 20.            Intra module refs:   UART_init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           calcBAUD::?relay        00000121 
+           calcBAUD::?relay        00000185 
+    -------------------------------------------------------------------------
+BANK_RELAYS
+  Relative segment, address: CODE 0000018B - 00000190 (0x6 bytes), align: 0
+  Segment part 24.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           flushByte::?relay       0000018B        baro_read_press (sensors)
+                                                   humid_read_humidity (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
 
     *************************************************************************
 
@@ -881,16 +1208,15 @@ CSTART
   Segment part 16.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           __INIT_XDATA_Z          00000073        I2C_CLOCK (SensorTag_Main)
-                                                   I2C_DATA (SensorTag_Main)
-                                                   I2C_DEVICE (SensorTag_Main)
-                                                   I2C_REGISTER (SensorTag_Main)
-                                                   N_BYTES (SensorTag_Main)
+           __INIT_XDATA_Z          00000073        RXbuffer (SensorTag_Main)
                                                    buffer (hal_sensor)
-                                                   byteRX (SensorTag_Main)
-                                                   byte_number (SensorTag_Main)
+                                                   bytes_to_proc (SensorTag_Main)
+                                                   humid_resolution (sensors)
+                                                   humid_usr (sensors)
                                                    i2cAddr (hal_i2c)
-                                                   mode (SensorTag_Main)
+                                                   sleepTimer (sleepTimer)
+                                                   timer_flag (SensorTag_Main)
+                                                   write_pos (SensorTag_Main)
     -------------------------------------------------------------------------
 CSTART
   Relative segment, address: CODE 00000083 - 000000A8 (0x26 bytes), align: 0
@@ -898,6 +1224,7 @@ CSTART
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            __INIT_XDATA_I          00000083        BAUD_RATE (uart)
+                                                   timeout (SensorTag_Main)
     -------------------------------------------------------------------------
 CSTART
   Relative segment, address: CODE 000000A9 - 000000BE (0x16 bytes), align: 0
@@ -985,6 +1312,9 @@ VREG
                                                    HalI2CWrite (hal_i2c)
                                                    HalSensorReadReg (hal_sensor)
                                                    HalSensorWriteReg (hal_sensor)
+                                                   HumidReadData (sensors)
+                                                   RX0_ISR (SensorTag_Main)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
                                                    calcBAUD (uart)
     -------------------------------------------------------------------------
@@ -996,6 +1326,8 @@ VREG
            ?V1                     00000009        HalI2CRead (hal_i2c)
                                                    HalSensorReadReg (hal_sensor)
                                                    HalSensorWriteReg (hal_sensor)
+                                                   RX0_ISR (SensorTag_Main)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
                                                    calcBAUD (uart)
     -------------------------------------------------------------------------
@@ -1005,6 +1337,7 @@ VREG
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?V2                     0000000A        HalSensorWriteReg (hal_sensor)
+                                                   SetSleepTimer (sleepTimer)
     -------------------------------------------------------------------------
 VREG
   Relative segment, address: DATA 0000000B - 0000000B (0x1 bytes), align: 0
@@ -1012,6 +1345,7 @@ VREG
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?V3                     0000000B        HalSensorWriteReg (hal_sensor)
+                                                   SetSleepTimer (sleepTimer)
     -------------------------------------------------------------------------
 VREG
   Relative segment, address: DATA 0000000C - 0000000C (0x1 bytes), align: 0
@@ -1034,7 +1368,18 @@ XSP
                                                    ?XSTACK_DISP0_8 (?XSTACK_DISP8)
                                                    ?XSTACK_DISP102_8 (?XSTACK_DISP8_RP)
                                                    HalSensorReadReg (hal_sensor)
+                                                   HumidWriteCmd (sensors)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
+                                                   baro_read_press (sensors)
+                                                   humid_read_humidity (sensors)
+                                                   init_acc (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?BANKED_CODE_SUPPORT
@@ -1049,17 +1394,85 @@ CSTART
            ?BCALL_FF               000000D1        ?call_main (?cmain)
            ?BRET_FF                000000D7        ?BANKED_LEAVE_XDATA (?BANKED_LEAVE_XDATA)
                                                    HalI2CInit (hal_i2c)
+                                                   HumidWriteCmd (sensors)
+                                                   SleepReadTimer (sleepTimer)
+                                                   baro_read_press (sensors)
+                                                   flushByte (uart)
+                                                   humid_init (sensors)
+                                                   humid_read_humidity (sensors)
                                                    i2cMstStrt (hal_i2c)
+                                                   init_acc (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
                                                    sensor_int_init (sensors)
+                                                   sensors_init (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
            ?BDISPATCH_FF           000000DA        HalI2CInit::?relay (hal_i2c)
                                                    HalI2CRead::?relay (hal_i2c)
                                                    HalI2CWrite::?relay (hal_i2c)
                                                    HalSensorReadReg::?relay (hal_sensor)
                                                    HalSensorWriteReg::?relay (hal_sensor)
+                                                   HumidReadData::?relay (sensors)
+                                                   HumidWriteCmd::?relay (sensors)
+                                                   SetSleepTimer::?relay (sleepTimer)
+                                                   SleepReadTimer::?relay (sleepTimer)
                                                    UART_init::?relay (uart)
+                                                   baro_read_press::?relay (sensors)
                                                    calcBAUD::?relay (uart)
+                                                   flushByte::?relay (uart)
+                                                   humid_init::?relay (sensors)
+                                                   humid_read_humidity::?relay (sensors)
                                                    i2cMstStrt::?relay (hal_i2c)
+                                                   init_acc::?relay (sensors)
+                                                   read_acc::?relay (sensors)
+                                                   read_gyro::?relay (sensors)
+                                                   read_mag::?relay (sensors)
+                                                   read_sensor::?relay (sensors)
                                                    sensor_int_init::?relay (sensors)
+                                                   sensors_init::?relay (sensors)
+                                                   start_baro::?relay (sensors)
+                                                   start_gyro::?relay (sensors)
+                                                   start_mag::?relay (sensors)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?L_ADD_TO_X
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 00000191 - 000001A3 (0x13 bytes), align: 0
+  Segment part 1.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?L_ADD_TO_X             00000191        SetSleepTimer (sleepTimer)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?XLOAD_R2345
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 000001A4 - 000001AF (0xc bytes), align: 0
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?XLOAD_R2345            000001A4        SleepReadTimer (sleepTimer)
+                                                   main (SensorTag_Main)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?XSTORE_R2345
+
+  SEGMENTS IN THE MODULE
+  ======================
+RCODE
+  Relative segment, address: CODE 000001B0 - 000001BB (0xc bytes), align: 0
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?XSTORE_R2345           000001B0        SetSleepTimer (sleepTimer)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?MOVE_LONG8_XDATA_IDATA
@@ -1067,12 +1480,12 @@ CSTART
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000127 - 00000133 (0xd bytes), align: 0
+  Relative segment, address: CODE 000001BC - 000001C8 (0xd bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?MOVE_LONG8_XDATA_IDATA
-                                   00000127        ?PUSH_XSTACK_I (?PUSH_XSTACK_I)
+                                   000001BC        ?PUSH_XSTACK_I (?PUSH_XSTACK_I)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?ALLOC_XSTACK8
@@ -1080,12 +1493,23 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000134 - 00000149 (0x16 bytes), align: 0
+  Relative segment, address: CODE 000001C9 - 000001DE (0x16 bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?ALLOC_XSTACK8          00000134        HalSensorReadReg (hal_sensor)
+           ?ALLOC_XSTACK8          000001C9        HalSensorReadReg (hal_sensor)
+                                                   HumidWriteCmd (sensors)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
+                                                   baro_read_press (sensors)
+                                                   humid_read_humidity (sensors)
+                                                   init_acc (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?DEALLOC_XSTACK8
@@ -1093,12 +1517,23 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 0000014A - 00000164 (0x1b bytes), align: 0
+  Relative segment, address: CODE 000001DF - 000001F9 (0x1b bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?DEALLOC_XSTACK8        0000014A        HalSensorReadReg (hal_sensor)
+           ?DEALLOC_XSTACK8        000001DF        HalSensorReadReg (hal_sensor)
+                                                   HumidWriteCmd (sensors)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
+                                                   baro_read_press (sensors)
+                                                   humid_read_humidity (sensors)
+                                                   init_acc (sensors)
+                                                   read_acc (sensors)
+                                                   read_gyro (sensors)
+                                                   read_mag (sensors)
+                                                   start_baro (sensors)
+                                                   start_gyro (sensors)
+                                                   start_mag (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?ADD_XSTACK_DISP8
@@ -1106,11 +1541,11 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000165 - 0000017F (0x1b bytes), align: 0
+  Relative segment, address: CODE 000001FA - 00000214 (0x1b bytes), align: 0
   Segment part 1.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?ADD_XSTACK_DISP0_8     00000165        ?PUSH_XSTACK_I (?PUSH_XSTACK_I)
+           ?ADD_XSTACK_DISP0_8     000001FA        ?PUSH_XSTACK_I (?PUSH_XSTACK_I)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?XSTACK_DISP8
@@ -1118,12 +1553,14 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000180 - 00000189 (0xa bytes), align: 0
+  Relative segment, address: CODE 00000215 - 0000021E (0xa bytes), align: 0
   Segment part 1.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?XSTACK_DISP0_8         00000180        UART_init (uart)
+           ?XSTACK_DISP0_8         00000215        SetSleepTimer (sleepTimer)
+                                                   UART_init (uart)
                                                    calcBAUD (uart)
+                                                   humid_read_humidity (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?XSTACK_DISP8_RP
@@ -1131,11 +1568,11 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 0000018A - 00000191 (0x8 bytes), align: 0
+  Relative segment, address: CODE 0000021F - 00000226 (0x8 bytes), align: 0
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?XSTACK_DISP102_8       0000018A        UART_init (uart)
+           ?XSTACK_DISP102_8       0000021F        UART_init (uart)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?BANKED_ENTER_XDATA
@@ -1143,16 +1580,19 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000192 - 000001FD (0x6c bytes), align: 0
+  Relative segment, address: CODE 00000227 - 00000292 (0x6c bytes), align: 0
   Segment part 1.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?BANKED_ENTER_XDATA     00000192        HalI2CRead (hal_i2c)
+           ?BANKED_ENTER_XDATA     00000227        HalI2CRead (hal_i2c)
                                                    HalI2CWrite (hal_i2c)
                                                    HalSensorReadReg (hal_sensor)
                                                    HalSensorWriteReg (hal_sensor)
+                                                   HumidReadData (sensors)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
                                                    calcBAUD (uart)
+                                                   read_sensor (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?BANKED_LEAVE_XDATA
@@ -1160,16 +1600,19 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 000001FE - 00000243 (0x46 bytes), align: 0
+  Relative segment, address: CODE 00000293 - 000002D8 (0x46 bytes), align: 0
   Segment part 1.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?BANKED_LEAVE_XDATA     000001FE        HalI2CRead (hal_i2c)
+           ?BANKED_LEAVE_XDATA     00000293        HalI2CRead (hal_i2c)
                                                    HalI2CWrite (hal_i2c)
                                                    HalSensorReadReg (hal_sensor)
                                                    HalSensorWriteReg (hal_sensor)
+                                                   HumidReadData (sensors)
+                                                   SetSleepTimer (sleepTimer)
                                                    UART_init (uart)
                                                    calcBAUD (uart)
+                                                   read_sensor (sensors)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?PUSH_XSTACK_I
@@ -1177,18 +1620,18 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000244 - 00000247 (0x4 bytes), align: 0
+  Relative segment, address: CODE 000002D9 - 000002DC (0x4 bytes), align: 0
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?PUSH_XSTACK_I_TWO      00000244        UART_init (uart)
+           ?PUSH_XSTACK_I_TWO      000002D9        UART_init (uart)
     -------------------------------------------------------------------------
 RCODE
-  Relative segment, address: CODE 00000248 - 00000254 (0xd bytes), align: 0
+  Relative segment, address: CODE 000002DD - 000002E9 (0xd bytes), align: 0
   Segment part 4.             Intra module refs:   ?PUSH_XSTACK_I_TWO
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?PUSH_XSTACK_I          00000248 
+           ?PUSH_XSTACK_I          000002DD 
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?US_SWITCH_SPARSE
@@ -1196,30 +1639,30 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 00000255 - 0000025E (0xa bytes), align: 0
+  Relative segment, address: CODE 000002EA - 000002F3 (0xa bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?US_SWITCH_SPARSE       00000255        calcBAUD (uart)
+           ?US_SWITCH_SPARSE       000002EA        calcBAUD (uart)
            ?US_SWITCH_SPARSE_CFI_INVALID_BEGINS
-                                   00000255 
+                                   000002EA 
     -------------------------------------------------------------------------
 RCODE
-  Relative segment, address: CODE 0000025F - 0000029F (0x41 bytes), align: 0
+  Relative segment, address: CODE 000002F4 - 00000334 (0x41 bytes), align: 0
   Segment part 2.             Intra module refs:   Segment part 0
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?US_SWITCH_SPARSE_LEAVE
-                                   00000291        Segment part 0 (?US_JMP_IF_IN_RANGE)
+                                   00000326        Segment part 0 (?US_JMP_IF_IN_RANGE)
                                                    Segment part 0 (?US_JMP_IF_VALUE)
     -------------------------------------------------------------------------
 RCODE
-  Relative segment, address: CODE 000002A0 - 000002A0 (0x1 bytes), align: 0
+  Relative segment, address: CODE 00000335 - 00000335 (0x1 bytes), align: 0
   Segment part 4.             Intra module refs:   Segment part 0
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            ?US_SWITCH_SPARSE_CFI_INVALID_ENDS
-                                   000002A1 
+                                   00000336 
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?US_JMP_IF_IN_RANGE
@@ -1227,15 +1670,15 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 000002A1 - 000002DF (0x3f bytes), align: 0
+  Relative segment, address: CODE 00000336 - 00000374 (0x3f bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?US_JMP_IF_IN_RANGE     000002A1        ?US_SWITCH_SPARSE_LEAVE (?US_SWITCH_SPARSE)
+           ?US_JMP_IF_IN_RANGE     00000336        ?US_SWITCH_SPARSE_LEAVE (?US_SWITCH_SPARSE)
            ?US_JMP_IF_IN_RANGE_CFI_INVALID_BEGINS
-                                   000002A1 
+                                   00000336 
            ?US_JMP_IF_IN_RANGE_CFI_INVALID_ENDS
-                                   000002E0 
+                                   00000375 
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?US_JMP_IF_VALUE
@@ -1243,15 +1686,15 @@ RCODE
   SEGMENTS IN THE MODULE
   ======================
 RCODE
-  Relative segment, address: CODE 000002E0 - 0000030A (0x2b bytes), align: 0
+  Relative segment, address: CODE 00000375 - 0000039F (0x2b bytes), align: 0
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?US_JMP_IF_VALUE        000002E0        ?US_SWITCH_SPARSE_LEAVE (?US_SWITCH_SPARSE)
+           ?US_JMP_IF_VALUE        00000375        ?US_SWITCH_SPARSE_LEAVE (?US_SWITCH_SPARSE)
            ?US_JMP_IF_VALUE_CFI_INVALID_BEGINS
-                                   000002E0 
+                                   00000375 
            ?US_JMP_IF_VALUE_CFI_INVALID_ENDS
-                                   0000030B 
+                                   000003A0 
 
 
 
@@ -1271,30 +1714,33 @@ Module                    CODE      DATA      XDATA  IDATA    BIT
 ?BANKED_ENTER_XDATA        108
 ?BANKED_LEAVE_XDATA         70
 ?DEALLOC_XSTACK8            27
+?L_ADD_TO_X                 19
 ?MOVE_LONG8_XDATA_IDATA     13
 ?PUSH_XSTACK_I              17
 ?US_JMP_IF_IN_RANGE         63
 ?US_JMP_IF_VALUE            43
 ?US_SWITCH_SPARSE           76
+?XLOAD_R2345                12
 ?XSTACK_DISP8               10
 ?XSTACK_DISP8_RP             8
+?XSTORE_R2345               12
 ?cexit                       5
 ?cmain                      76
 CSTARTUP                    18
   + common                   3
-SensorTag_Main             619             5      9
-  + shared                 110            10
+SensorTag_Main             343             5     15
+  + shared                 110            12
   + common
 VIRTUAL_REGISTERS                   7                           8
 hal_i2c                    423                    1
 hal_sensor                 227                   24
-sensors                     55             3
-sleepTimer                                 3
-uart                       373             4      2
+sensors                  1 315                    2
+sleepTimer                 135             3      4
+uart                       411             6      2
 N/A (command line)                 16           640    192
 N/A (alignment)
 ----------               -----     --     --    ---    ---      -
-Total:                   2 310     23     25    676    192      8
+Total:                   3 510     23     26    688    192      8
   + common                 110
 
 
@@ -1309,19 +1755,19 @@ SEGMENT              SPACE    START ADDRESS   END ADDRESS     SIZE  TYPE  ALIGN
 =======              =====    =============   ===========     ====  ====  =====
 INTVEC               CODE          00000000 - 0000006D          6E   com    0
 CSTART               CODE          0000006E - 000000EE          81   rel    0
-IDATA_ID             CODE               000000EF                     dse    0
+DATA_ID              CODE               000000EF                     dse    0
 BDATA_ID             CODE               000000EF                     dse    0
 BIT_ID               CODE               000000EF                     dse    0
 IXDATA_ID            CODE               000000EF                     dse    0
 PDATA_ID             CODE               000000EF                     dse    0
-DATA_ID              CODE               000000EF                     dse    0
-XDATA_ID             CODE          000000EF - 000000F0           2   rel    0
-BANK_RELAYS          CODE          000000F1 - 00000126          36   rel    0
-RCODE                CODE          00000127 - 0000030A         1E4   rel    0
-CODE_N               CODE               0000030B                     dse    0
-DIFUNCT              CODE               0000030B                     dse    0
-NEAR_CODE            CODE          0000030B - 00000347          3D   rel    0
-<BANKED_CODE> 1      CODE          00000348 - 00000973         62C   rel    0
+IDATA_ID             CODE               000000EF                     dse    0
+XDATA_ID             CODE          000000EF - 000000F4           6   rel    0
+BANK_RELAYS          CODE          000000F5 - 00000190          9C   rel    0
+RCODE                CODE          00000191 - 0000039F         20F   rel    0
+CODE_N               CODE               000003A0                     dse    0
+DIFUNCT              CODE               000003A0                     dse    0
+NEAR_CODE            CODE          000003A0 - 00000424          85   rel    0
+<BANKED_CODE> 1      CODE          00000425 - 00000E23         9FF   rel    0
 REGISTERS            DATA          00000000 - 00000007           8   rel    0
 VREG                 DATA          00000008 - 00000014           D   rel    0
 PSP                  DATA               00000015                     dse    0
@@ -1338,13 +1784,13 @@ SFR_AN               DATA          00000080 - 00000080           1   rel    0
                      DATA          000000B8 - 000000B8           1 
                      DATA          000000BE - 000000BE           1 
                      DATA          000000C0 - 000000C2           3 
-                     DATA          000000C5 - 000000C6           2 
+                     DATA          000000C4 - 000000C6           3 
                      DATA          000000F1 - 000000F1           1 
                      DATA          000000F3 - 000000F4           2 
                      DATA          000000FD - 000000FF           3 
 XSTACK               XDATA         00000001 - 00000280         280   rel    0
-XDATA_Z              XDATA         00000281 - 000002A2          22   rel    0
-XDATA_I              XDATA         000002A3 - 000002A4           2   rel    0
+XDATA_Z              XDATA         00000281 - 000002AA          2A   rel    0
+XDATA_I              XDATA         000002AB - 000002B0           6   rel    0
 ISTACK               IDATA         00000040 - 000000FF          C0   rel    0
 
                 ****************************************
@@ -1353,9 +1799,9 @@ ISTACK               IDATA         00000040 - 000000FF          C0   rel    0
                 *                                      *
                 ****************************************
 
- 2 420 bytes of CODE  memory
-    23 bytes of DATA  memory (+ 25 absolute )
-   676 bytes of XDATA memory
+ 3 620 bytes of CODE  memory
+    23 bytes of DATA  memory (+ 26 absolute )
+   688 bytes of XDATA memory
    192 bytes of IDATA memory
      8 bits  of BIT   memory
 

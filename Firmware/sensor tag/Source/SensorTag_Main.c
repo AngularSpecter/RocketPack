@@ -5,8 +5,8 @@
 #include <hal_defs.h>
 #include <hal_board_cfg.h>
 #include "sleepTimer.h"
-//#include <hal_i2c.h>
-//#include <hal_sensor.h>
+#include <hal_i2c.h>
+#include <hal_sensor.h>
    
 #include "uart.h"
 #include "sensors.h"
@@ -22,7 +22,8 @@
 #define MASTER_WRITE                        0xe0        //11100000
 #define MASTER_READ                         0xC0        //11000000
 #define MASTER_SEL                          0xf0        //11110000
- 
+
+#define DATA_READ                           0x80
 
 #define ACC_I2C_ADDRESS                     0x0F        //00001111
 #define GYRO_I2C_ADDRESS                    0x68        //01101000
@@ -58,6 +59,17 @@ uint8      I2C_DEVICE;
 uint8      I2C_REGISTER;
 uint8      N_BYTES = 0;
 uint8      I2C_DATA[MAX_BYTES];
+
+#define BUFFER_LEN  8
+  
+volatile uint8 RXbuffer[BUFFER_LEN];
+volatile uint8 read_pos  = 0;
+volatile uint8 write_pos = 0;
+uint8 bytes_to_proc = 0;
+  
+uint8 current_byte;
+
+uint8 timer_flag = 0;
 /*************************************************************************************************
           Main
 **************************************************************************************************/
@@ -65,195 +77,115 @@ void main(void)
 {
   
   HAL_BOARD_INIT();
+   P1_1 = 1;
+   P0_7 = 1;
   
+  /*Configure Side Switch*/
+    P0SEL &= ~(BV(0));    /* Set pin function to GPIO */
+    P0DIR &= ~(BV(0));    /* Set pin direction to Input */
+    P0IEN |=   BV(0);     /* Enable Interrupt */
+  
+  
+  /*Configure sensor interrupts*/
+  
+    #define GYRO_INT        BV(1)
+    #define ACC_INT         BV(2)
+    #define MAG_INT         BV(6)
+    #define IR_INT          BV(3)
+    
+    #define GYRO_INT_ON()   st(P0IEN |= GYRO_INT;);
+    #define GYRO_INT_OFF()  st(P0IEN &= ~GYRO_INT;);
+        
+    #define ACC_INT_ON()    st(P0IEN |= ACC_INT;);
+    #define ACC_INT_OFF()   st(P0IEN &= ~ACC_INT;);
+
+    #define MAG_INT_ON()    st(P0IEN |= MAG_INT;);
+    #define MAG_INT_OFF()   st(P0IEN &= ~MAG_INT;);
+    
+    #define IR_INT_ON()     st(P0IEN |= IR_INT;);
+    #define IR_INT_OFF()    st(P0IEN &= ~IR_INT;);
+
+    
+    //Gyro Interrupt  P0.1
+    P0SEL &= ~(BV(1));    /* Set pin function to GPIO */
+    P0DIR &= ~(BV(1));    /* Set pin direction to Input */
+    
+    //Accelerometer Interrupt  P0.2
+    P0SEL &= ~(BV(2));    /* Set pin function to GPIO */
+    P0DIR &= ~(BV(2));    /* Set pin direction to Input */
+    
+    //Magnetometer Interrupt  P0.6
+    P0SEL &= ~(BV(6));    /* Set pin function to GPIO */
+    P0DIR &= ~(BV(6));    /* Set pin direction to Input */
+
+    //IR Temp Interrupt  P0.3
+    P0SEL &= ~(BV(3));    /* Set pin function to GPIO */
+    P0DIR &= ~(BV(3));    /* Set pin direction to Input */
+    
+    P0INP |= BV(1) | BV(2) | BV(6) | BV(3);  //high-z the pins
+    //P2INP |= BV(5);    //enable pull down resistors on P0
+    
+    /* Clear any pending interrupts */  
+    P0IFG = 0;
+    P0IF  = 0;
+    
+    IEN1  |= BV(5);    /* enable CPU interrupt for all of port 0*/ 
+  
+  
+  /*Configure UART*/
   UART_init();
-  U0CSR &= ~0x04;
-  ENABLE_RX();
+
  
   /*setup sensors*/
- // sensors_init();
- sensor_int_init();
+  sensors_init();
+  sensor_int_init();
+  
+  
+  start_gyro();
+  init_acc();
+  start_mag();
+  start_baro();
+  humid_init();
   
   /* Setup LED's */  
   P1DIR |= BV(0);
   P0DIR |= BV(4);
+  
+
   
   P1_0 = 1;
   P0_4 = 1;
   
   SLEEPCMD |= 0x02;  //pm 2
   
-  IEN0 |= 0x04;  //enable USART0 RX interrupt
-  
   EA = 1;
   
-  uint8 RXbuffer;
+
   bool success;
   
+  
+  
+  SetSleepTimer(timeout);
   while(1)
   {
-    //if we have a byte on the UART to read
-    if (byteRX)
+    
+    if (timer_flag)
     {
-      byteRX = FALSE;
-      RXbuffer = U0DBUF;
+    timer_flag = 0;
+   // read_sensor(ACC_I2C_ADDRESS);
+    read_sensor(GYRO_I2C_ADDRESS);
+   // read_sensor(MAG_I2C_ADDRESS);
+   // read_sensor(BARO_I2C_ADDRESS);
+   // read_sensor(HUMID_I2C_ADDRESS);
     
-      /*************************************************/
-      //If  we know how many bytes we have to work with
-      if (N_BYTES)
-      {
-       
-        /************************************************/
-        //If we are reading, then try and read the bytes from the bus
-        if (mode == MASTER_READ)
-        {
-          //if the register addess is null, then just write straight to the bus
-          if (I2C_REGISTER == 0x00)
-          {
-            success = HalI2CRead(N_BYTES,&I2C_DATA[0]);
-          }else{
-            success = HalSensorReadReg(I2C_REGISTER,&I2C_DATA[0],N_BYTES);  
-          }
-
-        } //end (mode == MASTER_READ)
-        
-        
-        /************************************************/
-        //If we are writing data
-        if ( (mode == MASTER_WRITE) )
-        {
-          
-          //if all of the data is loaded into the buffer
-          if (byte_number-2 == N_BYTES )
-          {
-            //if the register addess is null, then just write straight to the bus
-            if (I2C_REGISTER == 0x00)
-            {
-              success = HalI2CWrite(N_BYTES,&I2C_DATA[0]);
-            }else{
-              success = HalSensorWriteReg(I2C_REGISTER,&I2C_DATA[0],N_BYTES);  
-            }
-          //otherwise, just load the buffer and move on  
-          }else{
-            I2C_DATA[byte_number-3] = RXbuffer;  
-          }
-        } //end (mode == MASTER_WRITE)
-        
-        
-      /***************************************************/  
-      //If there are no bytes to read, then check for a change in mode  
-      }else{
-        //if we are switching speeds
-        if (RXbuffer == MASTER_SEL){
-           byte_number = 0; // reset byte count
-           mode        = MASTER_SEL;        
-        } 
-        
-        //if we starting a write
-        if (RXbuffer == MASTER_WRITE){
-           byte_number = 0; // reset byte count
-           mode        = MASTER_WRITE;        
-        }
-        
-        //if we are starting a read
-        if (RXbuffer == MASTER_READ){
-           byte_number = 0; // reset byte count
-           mode        = MASTER_READ;        
-        }
-      
-      } //end if(!N_BYTES)
-      
-      /***********************************************************************/
-      //If we are on byte number 1, we are processing a command
-      if (byte_number == 1)
-      {
-          
-        //if we are selecting a new device
-        if( mode == MASTER_SEL)
-        {
-          success = FALSE;
-          
-          switch (RXbuffer)
-          {
-          case ACC_I2C_ADDRESS :
-              I2C_DEVICE = ACC_I2C_ADDRESS;
-              I2C_CLOCK  = ACC_SPEED;
-              success = TRUE;
-              break;
-          case GYRO_I2C_ADDRESS :
-              I2C_DEVICE = GYRO_I2C_ADDRESS;
-              I2C_CLOCK  = GYRO_SPEED;
-              success = TRUE;
-              break;
-          case MAG_I2C_ADDRESS :
-              I2C_DEVICE = MAG_I2C_ADDRESS;
-              I2C_CLOCK  = MAG_SPEED;
-              success = TRUE;
-              break;          
-          case BARO_I2C_ADDRESS :
-              I2C_DEVICE = BARO_I2C_ADDRESS;
-              I2C_CLOCK  = BARO_SPEED;
-              success = TRUE;
-              break;
-          case HUMID_I2C_ADDRESS :
-              I2C_DEVICE = HUMID_I2C_ADDRESS;
-              I2C_CLOCK  = HUMID_SPEED;
-              success = TRUE;
-              break;
-          case TMP006_I2C_ADDRESS :  
-              I2C_DEVICE = TMP006_I2C_ADDRESS;
-              I2C_CLOCK  = TMP006_SPEED;
-              success = TRUE;
-              break;    
-          }
-          
-          if (success){
-            HalI2CInit(I2C_DEVICE, I2C_CLOCK);
-            //UART_SEND_ACK()
-          }
-          else
-          {
-            //UART_SEND_NACK();
-          }
-          
-        } //end if( mode == MASTER_SEL)
-        
-        
-        //IF we are reading or writing a register value
-        if( (mode == MASTER_WRITE) || (mode == MASTER_READ) )
-        {
-          I2C_REGISTER = RXbuffer;
-          //UART_SEND_ACK();
-        }
-        
-      }//end if(byte_numer ==1)
-      
-      
-      /***********************************************************************/
-      //Byte number 2 is the number of bytes we are going to read or write.
-      
-        if (byte_number == 2)
-       {
-         if (RXbuffer <= MAX_BYTES)
-         {
-           N_BYTES = RXbuffer;
-           //UART_SEND_ACK();
-         }
-         else
-         {
-           N_BYTES = 0;
-           //UART_SEND_NAK();
-         }
-       }  //end if(byte_number == 2)
-      
-    }
     
-    IEN0 |= 0x04;  //enable USART0 RX interrupt
-    //SetSleepTimer(timeout);
-    //PCON |= 1; 
-
+    SetSleepTimer(timeout);
+    //PCON |= 1;  
     }
    
+    IEN0 |= BV(2);    
+   
+  }//end WHILE
 }
 /**************************************************************************************************
                                            CALL-BACKS
@@ -261,10 +193,12 @@ void main(void)
 _PRAGMA(vector=URX0_VECTOR)
 __interrupt void RX0_ISR(void)
 {
-  IEN0 &= ~0x04;  
-  U0CSR &= ~0x04; 
-  byteRX = TRUE;
-  byte_number++;  
+  IEN0 &= ~BV(2);                               //disable the interrupt
+  RXbuffer[write_pos++] = U0DBUF;               //push value to buffer
+  bytes_to_proc++;                              //incriment the byte count
+  if (write_pos == BUFFER_LEN) write_pos = 0;   //roll over the buffer counter
+  IEN0 |= BV(2);                                //restart interrupt
+  P1_0 ^= 1 ;
 }
 
 /*Sleep Timer interrupt */
@@ -273,6 +207,7 @@ __interrupt void SLEEP_ISR(void)
 {
   SLEEP_TIMER_CLEAR();
    P1_0 ^= 1 ;
+   timer_flag = 1;
 }
 
 _PRAGMA(vector=P0INT_VECTOR) 
