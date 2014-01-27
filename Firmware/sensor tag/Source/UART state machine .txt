@@ -1,0 +1,191 @@
+/*    UART state machine    ************************************************/
+    
+    //if we have a byte on the UART to read
+   if (bytes_to_proc)
+    {
+      bytes_to_proc--;
+      current_byte = RXbuffer[read_pos++];
+      if (read_pos == BUFFER_LEN) read_pos = 0;
+    
+      //If we aren't reading bytes off the bus, look for commands
+      if (N_BYTES == 0)
+      {
+        
+        //If we get a start command
+        if (current_byte == MASTER_SEL){
+           byte_number = 1; // reset byte count
+           mode        = MASTER_SEL;     
+           continue;
+        } 
+        
+        //if we starting a write
+        if (current_byte == MASTER_WRITE){
+           byte_number = 1; // reset byte count
+           mode        = MASTER_WRITE;        
+           continue;
+        }
+        
+        //if we are starting a read
+        if (current_byte == MASTER_READ){
+           byte_number = 1; // reset byte count
+           mode        = MASTER_READ;        
+           continue;
+        }
+        
+        /*********************************************************************/
+        //If we make it this far, we are reading a command
+        
+        //If byte_number = 1, we are the second byte of the command string
+        if(byte_number == 1)
+        {
+         byte_number++;
+         
+        //if we are selecting a new device
+        if( mode == MASTER_SEL)
+        {
+          success = FALSE;
+          
+          switch (current_byte)
+          {
+          case ACC_I2C_ADDRESS :
+              I2C_DEVICE = ACC_I2C_ADDRESS;
+              I2C_CLOCK  = ACC_SPEED;
+              success = TRUE;
+              break;
+          case GYRO_I2C_ADDRESS :
+              I2C_DEVICE = GYRO_I2C_ADDRESS;
+              I2C_CLOCK  = GYRO_SPEED;
+              success = TRUE;
+              break;
+          case MAG_I2C_ADDRESS :
+              I2C_DEVICE = MAG_I2C_ADDRESS;
+              I2C_CLOCK  = MAG_SPEED;
+              success = TRUE;
+              break;          
+          case BARO_I2C_ADDRESS :
+              I2C_DEVICE = BARO_I2C_ADDRESS;
+              I2C_CLOCK  = BARO_SPEED;
+              success = TRUE;
+              break;
+          case HUMID_I2C_ADDRESS :
+              I2C_DEVICE = HUMID_I2C_ADDRESS;
+              I2C_CLOCK  = HUMID_SPEED;
+              success = TRUE;
+              break;
+          case TMP006_I2C_ADDRESS :  
+              I2C_DEVICE = TMP006_I2C_ADDRESS;
+              I2C_CLOCK  = TMP006_SPEED;
+              success = TRUE;
+              break;    
+          }
+          
+          if (success){
+            HalI2CInit(I2C_DEVICE, I2C_CLOCK);
+            send_ACK();
+          }
+          else
+          {
+            send_NACK();
+          }
+          
+        } //end if( mode == MASTER_SEL)
+        
+        /*********************************************/
+        //IF we are reading or writing a register value
+        
+        if( (mode == MASTER_WRITE) || (mode == MASTER_READ) )
+        {
+          I2C_REGISTER = current_byte;
+          //send_ACK();
+        }
+      
+        continue;
+      }//end if(byte_numer ==1)
+      
+      /***********************************************************************/
+      //If we are on byte 2, we are reading the number of bytes to read/write
+      
+        if (byte_number == 2)
+       {
+         if (current_byte <= MAX_BYTES)
+         {
+           N_BYTES =current_byte;
+           //UART_SEND_ACK();
+         }
+         else
+         {
+           N_BYTES = 0;
+           send_NACK();
+         }
+       }  //end if(byte_number == 2)
+      
+
+   /***************************************************************************/
+   /* If N_BYTES is greater than zero, then treat the next N bytes on the bus as
+      raw data, and do not try and try and compare against register or command
+      addresses
+   */
+      }else{
+     
+        /************************************************/
+        //If we are reading, then try and read the bytes from the bus
+        if (mode == MASTER_READ)
+        {
+          
+          switch(I2C_REGISTER)
+          {
+          case 0x00 :
+             success = HalI2CRead(N_BYTES,&I2C_DATA[byte_number-2]);
+             break;
+             
+          case DATA_READ :
+             success = read_sensor(I2C_DEVICE);
+             break;
+              
+          default :
+             success = HalSensorReadReg(I2C_REGISTER,&I2C_DATA[byte_number-2],N_BYTES);
+          }
+          
+          
+          
+          if (success)
+          {
+            flushByte( &I2C_DATA[byte_number-2] );
+            N_BYTES--;
+          }else{
+            send_NACK();
+            N_BYTES = 0;
+          }
+          
+          
+        } //end (mode == MASTER_READ)
+        
+        
+        /************************************************/
+        //If we are writing data
+        if ( (mode == MASTER_WRITE) )
+        {
+           //Load the data into the buffer
+           I2C_DATA[byte_number-2] = current_byte; 
+           
+          //if all of the data is loaded into the buffer
+          if (byte_number-1 == N_BYTES )
+          {
+            //if the register addess is null, then just write straight to the bus
+            if (I2C_REGISTER == 0x00)
+            {
+              success = HalI2CWrite(N_BYTES,&I2C_DATA[0]);
+            }else{
+              success = HalSensorWriteReg(I2C_REGISTER,&I2C_DATA[0],N_BYTES);  
+            }
+          
+            if (success) {send_ACK(); }else{ send_NACK();}
+            
+          N_BYTES = 0;  
+          }
+          
+        } //end (mode == MASTER_WRITE)
+   
+      }
+    
+    }
