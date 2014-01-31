@@ -4974,9 +4974,21 @@ Metric Code Size 5664</description>
 </class>
 </classes>
 <parts>
-<part name="U$1" library="xbee" deviceset="XBEE_PRO_S3B" device=""/>
-<part name="AUX_POWER" library="pinhead" deviceset="PINHD-1X2" device=""/>
-<part name="BRIDGE" library="connectors" deviceset="CC-DEBUG" device=""/>
+<part name="U$1" library="xbee" deviceset="XBEE_PRO_S3B" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
+<part name="AUX_POWER" library="pinhead" deviceset="PINHD-1X2" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
+<part name="BRIDGE" library="connectors" deviceset="CC-DEBUG" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
 <part name="SUPPLY1" library="supply2" deviceset="GND" device=""/>
 <part name="P+1" library="supply1" deviceset="VCC" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
@@ -4985,20 +4997,48 @@ Metric Code Size 5664</description>
 <part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
 <part name="+3V1" library="supply1" deviceset="+3V3" device=""/>
 <part name="SUPPLY5" library="supply2" deviceset="GND" device=""/>
-<part name="U1" library="TexasInstruments" deviceset="TPS73632_DBV_5" device=""/>
-<part name="U2" library="linear" deviceset="LTC1540" device=""/>
-<part name="R2" library="adafruit" deviceset="R-US_" device="R1206" value="5.1M"/>
-<part name="R3" library="adafruit" deviceset="R-US_" device="R1206" value="3M"/>
+<part name="U1" library="TexasInstruments" deviceset="TPS73632_DBV_5" device="">
+<attribute name="MF" value="TEXAS INSTRUMENT CONNECTORS"/>
+<attribute name="MPN" value="TPS73632DBVRG4"/>
+<attribute name="OC_NEWARK" value="71J8238"/>
+</part>
+<part name="U2" library="linear" deviceset="LTC1540" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value="LTC1540CMS8#PBF"/>
+<attribute name="OC_NEWARK" value="56M1861"/>
+</part>
+<part name="R2" library="adafruit" deviceset="R-US_" device="R1206" value="5.1M">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value="MCPWR06FTEO5104"/>
+<attribute name="OC_NEWARK" value="43T5652"/>
+</part>
+<part name="R3" library="adafruit" deviceset="R-US_" device="R1206" value="3M">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
 <part name="P+3" library="supply1" deviceset="VCC" device=""/>
 <part name="SUPPLY6" library="supply2" deviceset="GND" device=""/>
 <part name="P+4" library="supply1" deviceset="VCC" device=""/>
 <part name="SUPPLY7" library="supply2" deviceset="GND" device=""/>
-<part name="C5" library="adafruit" deviceset="C-US" device="C1206" value="1u"/>
-<part name="C6" library="adafruit" deviceset="C-US" device="C1206" value="47p"/>
+<part name="C5" library="adafruit" deviceset="C-US" device="C1206" value="1u">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
+<part name="C6" library="adafruit" deviceset="C-US" device="C1206" value="47p">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
 <part name="+3V5" library="supply1" deviceset="+3V3" device=""/>
 <part name="SUPPLY11" library="supply2" deviceset="GND" device=""/>
 <part name="FRAME1" library="frames" deviceset="TABL_L" device=""/>
-<part name="JP1" library="pinhead" deviceset="PINHD-1X2" device="/90"/>
+<part name="JP1" library="pinhead" deviceset="PINHD-1X2" device="/90">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_NEWARK" value="unknown"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -5026,9 +5066,21 @@ Rest line is connected to MCU to allow main board to reset the sensor tag
 Reset line is sharaed with the SPI STE pin</text>
 </plain>
 <instances>
-<instance part="U$1" gate="G$1" x="30.48" y="25.4"/>
-<instance part="AUX_POWER" gate="G$1" x="-109.22" y="22.86"/>
-<instance part="BRIDGE" gate="G$1" x="139.7" y="27.94"/>
+<instance part="U$1" gate="G$1" x="30.48" y="25.4">
+<attribute name="OC_NEWARK" x="30.48" y="25.4" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="30.48" y="25.4" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="30.48" y="25.4" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="AUX_POWER" gate="G$1" x="-109.22" y="22.86">
+<attribute name="OC_NEWARK" x="-109.22" y="22.86" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="-109.22" y="22.86" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="-109.22" y="22.86" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="BRIDGE" gate="G$1" x="139.7" y="27.94">
+<attribute name="OC_NEWARK" x="139.7" y="27.94" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="139.7" y="27.94" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="139.7" y="27.94" size="1.778" layer="96" display="off"/>
+</instance>
 <instance part="SUPPLY1" gate="GND" x="-96.52" y="17.78"/>
 <instance part="P+1" gate="VCC" x="-91.44" y="25.4" rot="R270"/>
 <instance part="P+2" gate="VCC" x="-114.3" y="-45.72" rot="R270"/>
@@ -5037,21 +5089,49 @@ Reset line is sharaed with the SPI STE pin</text>
 <instance part="SUPPLY3" gate="GND" x="121.92" y="33.02"/>
 <instance part="+3V1" gate="G$1" x="5.08" y="35.56" rot="R270"/>
 <instance part="SUPPLY5" gate="GND" x="5.08" y="17.78"/>
-<instance part="U1" gate="A" x="-91.44" y="-48.26"/>
-<instance part="U2" gate="A" x="-83.82" y="-7.62"/>
-<instance part="R2" gate="G$1" x="-109.22" y="0" rot="R90"/>
-<instance part="R3" gate="G$1" x="-109.22" y="-15.24" rot="R90"/>
+<instance part="U1" gate="A" x="-91.44" y="-48.26">
+<attribute name="OC_NEWARK" x="-91.44" y="-48.26" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="-91.44" y="-48.26" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="-91.44" y="-48.26" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="U2" gate="A" x="-83.82" y="-7.62">
+<attribute name="OC_NEWARK" x="-83.82" y="-7.62" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="-83.82" y="-7.62" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="-83.82" y="-7.62" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="R2" gate="G$1" x="-109.22" y="0" rot="R90">
+<attribute name="OC_NEWARK" x="-109.22" y="0" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="-109.22" y="0" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="-109.22" y="0" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="R3" gate="G$1" x="-109.22" y="-15.24" rot="R90">
+<attribute name="OC_NEWARK" x="-109.22" y="-15.24" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="-109.22" y="-15.24" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="-109.22" y="-15.24" size="1.778" layer="96" display="off"/>
+</instance>
 <instance part="P+3" gate="VCC" x="-58.42" y="-5.08" rot="R270"/>
 <instance part="SUPPLY6" gate="GND" x="-96.52" y="-25.4"/>
 <instance part="P+4" gate="VCC" x="-114.3" y="5.08" rot="R270"/>
 <instance part="SUPPLY7" gate="GND" x="-66.04" y="-25.4"/>
-<instance part="C5" gate="G$1" x="17.78" y="-5.08"/>
-<instance part="C6" gate="G$1" x="25.4" y="-5.08"/>
+<instance part="C5" gate="G$1" x="17.78" y="-5.08">
+<attribute name="OC_NEWARK" x="17.78" y="-5.08" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="17.78" y="-5.08" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="17.78" y="-5.08" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="C6" gate="G$1" x="25.4" y="-5.08">
+<attribute name="OC_NEWARK" x="25.4" y="-5.08" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="25.4" y="-5.08" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="25.4" y="-5.08" size="1.778" layer="96" display="off"/>
+</instance>
 <instance part="+3V5" gate="G$1" x="7.62" y="-2.54" rot="R270"/>
 <instance part="SUPPLY11" gate="GND" x="33.02" y="-12.7"/>
 <instance part="FRAME1" gate="G$1" x="-124.46" y="-200.66"/>
 <instance part="FRAME1" gate="G$2" x="175.26" y="-200.66"/>
-<instance part="JP1" gate="G$1" x="147.32" y="-2.54"/>
+<instance part="JP1" gate="G$1" x="147.32" y="-2.54">
+<attribute name="OC_NEWARK" x="147.32" y="-2.54" size="1.778" layer="96" display="off"/>
+<attribute name="MF" x="147.32" y="-2.54" size="1.778" layer="96" display="off"/>
+<attribute name="MPN" x="147.32" y="-2.54" size="1.778" layer="96" display="off"/>
+</instance>
 </instances>
 <busses>
 </busses>

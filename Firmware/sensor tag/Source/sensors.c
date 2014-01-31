@@ -65,12 +65,15 @@ void sensors_init(void)
 void burstRead(uint8 startADD, uint8 n_buffers)
 {
   uint8 byte;
+  uint8 checksum = 0;
   
   while(n_buffers--)
   {
     HalSensorReadReg(startADD++,&byte,1);
+    checksum |= (byte == 0) << n_buffers;
     flush_data(&byte);
   }
+  flush_data(&checksum);
 }
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -444,6 +447,12 @@ void humid_read_humidity(void)
   flush_data(&buffer[0]);
   flush_data(&buffer[1]);
   
+  buffer[0] = (buffer[0] == 0) | 
+              (buffer[0] == 0) << 1 |
+              (buffer[0] == 0) << 2 |
+              (buffer[0] == 0) << 3;
+  
+  flush_data(&buffer[0]);
 }
 
 
