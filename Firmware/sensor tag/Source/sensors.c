@@ -65,7 +65,7 @@ void sensors_init(void)
 void burstRead(uint8 startADD, uint8 n_buffers)
 {
   uint8 byte;
-  uint8 checksum = 0;
+  uint8 checksum = 0xF0;
   
   while(n_buffers--)
   {
@@ -214,7 +214,7 @@ void acc_sleep(bool sleep)
   HalSensorWriteReg(ACC_CTRL_REG1 , &power_mode, 1);
 }
 
-void read_acc()
+void read_acc(void)
 { 
   uint8 byte;
 
@@ -226,7 +226,13 @@ void read_acc()
    burstRead(ACC_XOUT_L, 6);
 }
 
-
+uint8 acc_int_status(void)
+{
+  uint8 status;
+  HalI2CInit(ACC_I2C_ADDRESS, i2cClock_267KHZ);
+  HalSensorReadReg(ACC_INT_SOURCE1 ,&status,1);
+  return (status & ACC_INT_DRDY);
+}
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -450,7 +456,8 @@ void humid_read_humidity(void)
   buffer[0] = (buffer[0] == 0) | 
               (buffer[0] == 0) << 1 |
               (buffer[0] == 0) << 2 |
-              (buffer[0] == 0) << 3;
+              (buffer[0] == 0) << 3 |
+               0xF0;
   
   flush_data(&buffer[0]);
 }

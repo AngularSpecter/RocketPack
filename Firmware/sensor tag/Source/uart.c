@@ -1,6 +1,6 @@
 #include "uart.h"
 
- unsigned int BAUD_RATE = 48;
+ unsigned int BAUD_RATE = 96;
 
 void UART_init(void)
 {
@@ -24,6 +24,12 @@ void UART_init(void)
   U0BAUD |= M; //BAUD_M  
   
   //U0GCR |= BV(5);
+  
+  U0UCR |= BV(7);   //Flush the UART
+  
+  ENABLE_RX();   //Start the receiver
+  
+  IEN0 |= BV(2);    //Enable interrupt
 }
 
 

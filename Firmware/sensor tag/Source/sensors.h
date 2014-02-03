@@ -264,8 +264,8 @@ Accelerometer
 void init_acc(void);
 void acc_int_mode(bool interrupt);
 void acc_sleep(bool sleep);
-void read_acc();
-
+void read_acc(void);
+uint8 acc_int_status(void);
 
 /*------------------------------------------------------------------------------
 ###############################################################################
