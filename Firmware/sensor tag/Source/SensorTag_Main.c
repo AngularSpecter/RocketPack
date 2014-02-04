@@ -17,9 +17,9 @@
    volatile uint32 timeout = 0x000F;
   
   //Mode bit mask
-  // 0 -> 4  :  Sensors
-  //   5     :  Auto poll (1 = auto poll, 0 = ping to poll)
-  //   6     :  Data rate (1 = low-rate,  0 = high rate)
+  // 0 -> 3  :  Sensors
+  //   4     :  Auto poll (1 = auto poll, 0 = ping to poll)
+ 
 
    //start up with all sensors running in ping-to-poll mode
    uint8 active_sensors = BV(0) | BV(1) | BV(2) | BV(3) | BV(4);

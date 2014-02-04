@@ -178,6 +178,10 @@ void init_acc(void)
   uint8 command = 0x00;          //put to sleep
   HalSensorWriteReg(ACC_CTRL_REG1, &command, 1);
   
+  //Set the resolution to 8G
+  command = ACC_GSEL1 | ACC_RES; 
+  HalSensorWriteReg(ACC_CTRL_REG1, &command, 1);
+  
     //configure CTRL2 - 6.25Hz
   command = ACC_OWUFB | ACC_OWUFC;
   HalSensorWriteReg(ACC_CTRL_REG2, &command, 1);

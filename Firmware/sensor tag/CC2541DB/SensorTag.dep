@@ -125,10 +125,6 @@
           <name>BICOMP</name>
           <file> 78</file>
         </tool>
-        <tool>
-          <name>ICC8051</name>
-          <file> 48</file>
-        </tool>
       </outputs>
       <inputs>
         <tool>
