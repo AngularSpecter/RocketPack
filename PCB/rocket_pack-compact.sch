@@ -150,10 +150,6 @@
 <wire x1="-6" y1="8" x2="6" y2="8" width="0.127" layer="21"/>
 <wire x1="-6" y1="8" x2="-12" y2="2" width="0.127" layer="21"/>
 <wire x1="6" y1="8" x2="12" y2="2" width="0.127" layer="21"/>
-<text x="-8" y="1" size="1.778" layer="27">Vcc</text>
-<text x="-8" y="-2" size="1.778" layer="27">DO</text>
-<text x="-8" y="-5" size="1.778" layer="27">DI</text>
-<text x="-8" y="-19" size="1.778" layer="27">GND</text>
 </package>
 </packages>
 <symbols>
@@ -171,6 +167,7 @@
 <pin name="CONFIG" x="17.78" y="5.08" length="middle" rot="R180"/>
 <pin name="SLEEP" x="17.78" y="0" length="middle" rot="R180"/>
 <pin name="STATUS" x="17.78" y="-2.54" length="middle" rot="R180"/>
+<pin name="COMMAND" x="17.78" y="-5.08" length="middle" rot="R180"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -181,6 +178,7 @@
 <devices>
 <device name="" package="PRO_S3B">
 <connects>
+<connect gate="G$1" pin="COMMAND" pad="P16"/>
 <connect gate="G$1" pin="CONFIG" pad="P6"/>
 <connect gate="G$1" pin="DI" pad="P3"/>
 <connect gate="G$1" pin="DO" pad="P2"/>
@@ -6503,14 +6501,14 @@ JP3: UCB0.   I2C/SPI, ground and regulated 3.3V</text>
 </net>
 <net name="CONFIG_RADIO" class="0">
 <segment>
-<pinref part="U$1" gate="G$1" pin="CONFIG"/>
-<wire x1="48.26" y1="30.48" x2="55.88" y2="30.48" width="0.1524" layer="91"/>
-<label x="55.88" y="30.48" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="U3" gate="A" pin="P3.6/TB2.1/TB1CLK"/>
 <wire x1="40.64" y1="-160.02" x2="53.34" y2="-160.02" width="0.1524" layer="91"/>
 <label x="53.34" y="-160.02" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$1" gate="G$1" pin="COMMAND"/>
+<wire x1="48.26" y1="20.32" x2="55.88" y2="20.32" width="0.1524" layer="91"/>
+<label x="55.88" y="20.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="SLEEP_RADIO" class="0">

@@ -1,9 +1,19 @@
 #include <msp430FR5739.h>
 #include "UART.h"
+#include "radio.h"
+#include "sensorTag.h"
+#include "types.h"
+
+
+volatile unsigned char dbRXflag = 0;
+volatile UARTERROR dbRXERROR = NOERROR;
+volatile UARTERROR dbTXERROR = NOERROR;
 
 void main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	
+    //Initialize the SensorTag daughter board
+    init_sensorTag();
 
    /*** Configure crystal ****************************/
     PJSEL0 |= BIT4 + BIT5;
@@ -21,21 +31,42 @@ void main(void) {
     }while (SFRIFG1&OFIFG);                  // Test oscillator fault flag
 
 
+
+
+
     /*** Configure Radio UART ( UCA0 ) *****************/
-
-
+    config_radio();					        //configure UART
+    sleep_radio(FALSE);
+    RADIOISR |=  RXIE;					//enable rx interrupt
 
 
     /*** Configure Daughter Board UART ( UCA1 ) *****************/
+    UARTERROR db_error = NOERROR;
+    db_error = init_db_UART();    		//configure UART
+    DBISR |=  RXIE;                     //enable rx interrupt
 
 
-
-
-
-
-  //   __bis_SR_register(LPM0_bits + GIE);      // LPM3 + Enable interrupt
     _enable_interrupts();
-    while(1) {}
+
+
+    //Allow the sensorTag to boot
+    sensorTag_reset(FALSE);
+
+    uint16 tmpBYTE = NULL;
+
+
+    db_send_byte(0xF0);
+
+    while(1) {
+
+    	if (dbRXflag)	//If a new char has been pushed into the buffer
+    	{
+    		db_error = db_buffer_pop(&tmpBYTE);
+    		db_send_byte(tmpBYTE);
+    	}
+
+    	__bis_SR_register(LPM0_bits + GIE);   // LPM0 + Enable interrupt
+    }
 
 
 }

@@ -1,13 +1,12 @@
 #include "UART.h"
 
-#define TXCMPLT		UCTXCPTIE       /* UART Transmit Complete Interrupt Enable */
-#define TXIE		UCTXIE          /* UART Transmit Interrupt Enable */
-#define RXIE		UCRXIE          /* UART Receive Interrupt Enable */
+void bridge_buffer(void)
+{
+	while (!(UCA0IFG&UCTXIFG));             // USCI_A0 TX buffer ready?
+		 UCA0TXBUF = UCA1RXBUF;
+}
 
 /*** Radio UART (uartA0) *******/
-#define RADIOISR	UCA0IE
-
-
 void init_radio_UART(void)
 {
     P2SEL1 |= BIT0 + BIT1;
@@ -23,6 +22,11 @@ void init_radio_UART(void)
     UCA0CTL1 &= ~UCSWRST;                  // release from reset
 }
 
+void radio_send_byte(unsigned char byte)
+{
+	 while (!(UCA0IFG&UCTXIFG));             // USCI_A0 TX buffer ready?
+	 UCA0TXBUF = byte;                       // TX -> RXed character
+}
 
 
 #pragma vector=USCI_A0_VECTOR
@@ -41,13 +45,22 @@ __interrupt void USCI_A0_ISR(void)
   }
 }
 
-
+/**************************************************************************************/
 /*** Daughter Board UART (uartA1) *******/
-#define DBISR	UCA1IE
+#define  DB_BUFFER_LEN  5
 
-void init_db_UART(void)
+
+const uint8 DBALLOWOVERFLOW  = FALSE;
+
+volatile unsigned int db_RX_byte[DB_BUFFER_LEN];
+volatile unsigned int db_read_idx  = 0;
+volatile unsigned int db_write_idx = 0;
+volatile unsigned int db_bytes_to_proc =  0;
+
+
+UARTERROR init_db_UART(void)
 {
-    P2SEL1 |= BIT5 + BIT6;
+    P2SEL1 |=   BIT5 + BIT6;
     P2SEL0 &= ~(BIT5 + BIT6);
 
     // Configure UART 0
@@ -58,18 +71,86 @@ void init_db_UART(void)
     UCA1MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
 
     UCA1CTL1 &= ~UCSWRST;                  // release from reset
+
+    return NOERROR;
+}
+
+UARTERROR db_send_byte(unsigned char byte)
+{
+	if ( !(UCA1IFG & UCTXIFG) )              //If the UART isn't ready to TX a byte
+	{
+		 DBISR |= UCTXCPTIE;			     //enable the TX complete ISR
+	   __bis_SR_register(LPM0_bits + GIE);   // LPM0 + Enable interrupt...sleep until UART ready
+		 DBISR &= ~UCTXCPTIE;
+	}
+	 UCA1TXBUF = byte;                       // TX byte
+
+	 return NOERROR;
 }
 
 
+/*** Generic functions to access buffer ***/
+
+//push a new byte into the buffer
+UARTERROR db_buffer_push(unsigned int value)
+{
+	//Check to see if we are going to overflow the buffer and throw an error if overflow isn't allowed
+	if ( !DBALLOWOVERFLOW && (db_bytes_to_proc == DB_BUFFER_LEN) )return OVERFLOW_NA;
+
+	db_RX_byte[db_write_idx++] = value;
+	if (db_write_idx >= DB_BUFFER_LEN) db_write_idx = 0;
+
+	//Check again for overflow and return a warning (without advancing the byte to proc count
+	if (db_bytes_to_proc == DB_BUFFER_LEN) return OVERFLOW_WA;
+
+	//If we make it here, then we haven't overflowed the buffer, so increase the number of bytes to proc
+	db_bytes_to_proc++;
+	return NOERROR;
+}
+
+//pop the first unread byte off the buffer
+UARTERROR db_buffer_pop(unsigned int *dest)
+{
+	*dest = NULL;
+	if( db_bytes_to_proc )
+	{
+	  *dest = db_RX_byte[db_read_idx++];
+	  if (db_read_idx >= DB_BUFFER_LEN) db_read_idx = 0;
+	  return NOERROR;
+	}
+	return BUFFEREMPTY;
+}
+
+//Spy on the (last)next byte received(to send) without advancing the pointer
+UARTERROR db_spy_buffer(dbBuffPos whichBuffer, uint8 *value)
+{
+	*value = NULL;
+	if ( !db_bytes_to_proc ) return BUFFEREMPTY;
+
+	switch (whichBuffer)
+	{
+	case READ :
+		*value = db_RX_byte[db_read_idx];
+		return NOERROR;
+	case WRITE :
+		*value = db_RX_byte[db_write_idx-1];
+		return NOERROR;
+	default:
+		*value = NULL;
+		return INVALIDOPTION;
+	}
+}
 
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void)
 {
-  switch(__even_in_range(UCA0IV,0x08))
+  switch(__even_in_range(UCA1IV,0x08))
   {
   case 0:							// Vector 0 - no interrupt
 	  break;
   case 2:                           // Vector 2 - RXIFG
+	  dbRXERROR = db_buffer_push(UCA1RXBUF);
+	  dbRXflag = 1;
 	  break;
   case 4:    						// Vector 4 - TXIFG
 	  break;
