@@ -28,6 +28,10 @@ void radio_send_byte(unsigned char byte)
 	 UCA0TXBUF = byte;                       // TX -> RXed character
 }
 
+void radio_send_string(unsigned char* string)
+{
+    while(*string) radio_send_byte(*string++);		//Advance though string till end
+}
 
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
@@ -55,7 +59,7 @@ const uint8 DBALLOWOVERFLOW  = FALSE;
 volatile unsigned int db_RX_byte[DB_BUFFER_LEN];
 volatile unsigned int db_read_idx  = 0;
 volatile unsigned int db_write_idx = 0;
-volatile unsigned int db_bytes_to_proc =  0;
+
 
 
 UARTERROR init_db_UART(void)
@@ -77,13 +81,8 @@ UARTERROR init_db_UART(void)
 
 UARTERROR db_send_byte(unsigned char byte)
 {
-	if ( !(UCA1IFG & UCTXIFG) )              //If the UART isn't ready to TX a byte
-	{
-		 DBISR |= UCTXCPTIE;			     //enable the TX complete ISR
-	   __bis_SR_register(LPM0_bits + GIE);   // LPM0 + Enable interrupt...sleep until UART ready
-		 DBISR &= ~UCTXCPTIE;
-	}
-	 UCA1TXBUF = byte;                       // TX byte
+	while ( !(UCA1IFG & UCTXIFG) );        //If the UART isn't ready to TX a byte
+	UCA1TXBUF = byte;                      // TX byte
 
 	 return NOERROR;
 }
@@ -109,13 +108,14 @@ UARTERROR db_buffer_push(unsigned int value)
 }
 
 //pop the first unread byte off the buffer
-UARTERROR db_buffer_pop(unsigned int *dest)
+UARTERROR db_buffer_pop(volatile unsigned int *dest)
 {
 	*dest = NULL;
 	if( db_bytes_to_proc )
 	{
 	  *dest = db_RX_byte[db_read_idx++];
 	  if (db_read_idx >= DB_BUFFER_LEN) db_read_idx = 0;
+	  db_bytes_to_proc--;
 	  return NOERROR;
 	}
 	return BUFFEREMPTY;
@@ -150,9 +150,11 @@ __interrupt void USCI_A1_ISR(void)
 	  break;
   case 2:                           // Vector 2 - RXIFG
 	  dbRXERROR = db_buffer_push(UCA1RXBUF);
-	  dbRXflag = 1;
+	  LPM0_EXIT;
 	  break;
   case 4:    						// Vector 4 - TXIFG
+	  break;
+  case 8:
 	  break;
   default:
 	  break;

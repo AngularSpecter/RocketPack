@@ -1,5 +1,6 @@
 #include <msp430FR5739.h>
 #include "types.h"
+#include "radio.h"
 
 #define TXCMPLT		UCTXCPTIE       /* UART Transmit Complete Interrupt Enable */
 #define TXIE		UCTXIE          /* UART Transmit Interrupt Enable */
@@ -22,19 +23,21 @@ void bridge_buffer(void);
 
 
 
-
 extern volatile unsigned char dbRXflag;
 extern volatile UARTERROR dbRXERROR;
 extern volatile UARTERROR dbTXERROR;
+extern volatile unsigned int db_bytes_to_proc;
+
 
 typedef enum {READ, WRITE} dbBuffPos;
 
 UARTERROR init_db_UART(void);
 UARTERROR db_send_byte(unsigned char byte);
 UARTERROR db_buffer_push(unsigned int value);
-UARTERROR db_buffer_pop(unsigned int *dest);
+UARTERROR db_buffer_pop(volatile unsigned int *dest);
 UARTERROR db_spy_buffer(dbBuffPos whichBuffer, uint8 *value);
 
 
 void init_radio_UART(void);
 void radio_send_byte(unsigned char byte);
+void radio_send_string(unsigned char* string);

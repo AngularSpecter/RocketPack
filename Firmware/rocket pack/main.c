@@ -3,11 +3,12 @@
 #include "radio.h"
 #include "sensorTag.h"
 #include "types.h"
-
+#include "timing.h"
 
 volatile unsigned char dbRXflag = 0;
 volatile UARTERROR dbRXERROR = NOERROR;
 volatile UARTERROR dbTXERROR = NOERROR;
+volatile unsigned int db_bytes_to_proc;
 
 void main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
@@ -57,15 +58,24 @@ void main(void) {
 
     db_send_byte(0xF0);
 
+    delay(32000);
+
+    uint8 count = 0;
+
     while(1) {
 
-    	if (dbRXflag)	//If a new char has been pushed into the buffer
+        db_send_byte(count++);
+        delay(32768);
+
+    	/*
+    	if (db_bytes_to_proc)	//If a new char has been pushed into the buffer
     	{
     		db_error = db_buffer_pop(&tmpBYTE);
     		db_send_byte(tmpBYTE);
-    	}
+    	}else{
 
-    	__bis_SR_register(LPM0_bits + GIE);   // LPM0 + Enable interrupt
+    	    __bis_SR_register(LPM0_bits + GIE);   // LPM0 + Enable interrupt
+    	} */
     }
 
 
