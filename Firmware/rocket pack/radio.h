@@ -1,6 +1,5 @@
 #include <msp430FR5739.h>
 #include "types.h"
-#include "UART.h"
 #include "timing.h"
 
 #define STATUS  BIT4

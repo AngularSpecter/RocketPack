@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-584534064
+Checksum=1643108873
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -80,37 +80,32 @@ Fmt50={W}0:buffer	3	0
 Fmt51={W}0:byteRX	3	0
 Fmt52={W}0:byte_number	3	0
 Fmt53={W}0:bytes_to_proc	3	0
-Fmt54={W}0:current_byte	4	0
-Fmt55={W}0:delay_ticks	3	0
-Fmt56={W}0:i	3	0
-Fmt57={W}0:loop_Counter	3	0
-Fmt58={W}0:mag[6]	3	0
-Fmt59={W}0:mode	4	0
-Fmt60={W}0:power_mode	1	0
-Fmt61={W}0:sensorReady	1	0
-Fmt62={W}0:sensorUpdated	1	0
-Fmt63={W}0:sleepTimer	3	0
-Fmt64={W}0:status	1	0
-Fmt65={W}0:str	3	0
-Fmt66={W}0:temp	3	0
-Fmt67={W}0:timeout	4	0
-Fmt68={W}0:ucLength	3	0
-Fmt69={W}0:v	1	0
-Fmt70={W}0:v & DATA_RDY_BIT	3	0
-Fmt71={W}0:val	3	0
-Fmt72={W}0:val1	3	0
-Fmt73={W}0:val2	3	0
-Fmt74={W}0:voltage	3	0
-Fmt75={W}0:~(sensorReady & 0x0E)	1	0
-Fmt76={W}0:~(unsigned char)(STLOAD & 0x01)	4	0
-Fmt77={W}0:~(unsigned int)(STLOAD & 0x01)	3	0
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\include\hal_sleep.h}.21.1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\sensors.h}.107.1" 0 0 0 0 "" 0 ""
-Count=2
-[ChipconEmu]
-Stop timers on halt=1
-Leave target running=1
+Fmt54={W}0:command	1	0
+Fmt55={W}0:current_byte	4	0
+Fmt56={W}0:delay_ticks	3	0
+Fmt57={W}0:humid_mode	4	0
+Fmt58={W}0:i	3	0
+Fmt59={W}0:loop_Counter	3	0
+Fmt60={W}0:mag[6]	3	0
+Fmt61={W}0:mode	4	0
+Fmt62={W}0:power_mode	1	0
+Fmt63={W}0:sensorReady	1	0
+Fmt64={W}0:sensorUpdated	1	0
+Fmt65={W}0:sleepTimer	3	0
+Fmt66={W}0:status	1	0
+Fmt67={W}0:str	3	0
+Fmt68={W}0:temp	3	0
+Fmt69={W}0:timeout	4	0
+Fmt70={W}0:ucLength	3	0
+Fmt71={W}0:v	1	0
+Fmt72={W}0:v & DATA_RDY_BIT	3	0
+Fmt73={W}0:val	3	0
+Fmt74={W}0:val1	3	0
+Fmt75={W}0:val2	3	0
+Fmt76={W}0:voltage	3	0
+Fmt77={W}0:~(sensorReady & 0x0E)	1	0
+Fmt78={W}0:~(unsigned char)(STLOAD & 0x01)	4	0
+Fmt79={W}0:~(unsigned int)(STLOAD & 0x01)	3	0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -118,6 +113,13 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\include\hal_sleep.h}.21.1" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\sensors.h}.127.1" 0 0 0 0 "" 0 ""
+Count=2
+[ChipconEmu]
+Stop timers on halt=0
+Leave target running=1
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -8,8 +8,8 @@ void sensor_int_init(void)
     //P0IEN |=   BV(1);     /* enable interrupt generation at port */
     
     //Accelerometer Interrupt  P0.2
-    P0SEL &= ~(BV(2));    /* Set pin function to GPIO */
-    P0DIR &= ~(BV(2));    /* Set pin direction to Input */
+    //P0SEL &= ~(BV(2));    /* Set pin function to GPIO */
+    //P0DIR &= ~(BV(2));    /* Set pin direction to Input */
     //P0IEN |=   BV(2);     /* enable interrupt generation at port */
     
     //Magnetometer Interrupt  P0.6
@@ -27,7 +27,7 @@ void sensor_int_init(void)
     
     /* Clear any pending interrupts */
     //P0IFG = ~(BV(1));  //gyro 
-    P0IFG = ~(BV(2));  //accelerometer
+   // P0IFG = ~(BV(2));  //accelerometer
     //P0IFG = ~(BV(6));  //magnetometer
     //P0IFG = ~(BV(3));  //IR Therm
     
@@ -65,7 +65,7 @@ void sensors_init(void)
 void burstRead(uint8 startADD, uint8 n_buffers)
 {
   uint8 byte;
-  uint8 checksum = 0xF0;
+  uint8 checksum = 0x80;
   
   while(n_buffers--)
   {
@@ -73,7 +73,7 @@ void burstRead(uint8 startADD, uint8 n_buffers)
     checksum |= (byte == 0) << n_buffers;
     flush_data(&byte);
   }
-  flush_data(&checksum);
+  flush_byte(&checksum);
 }
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -85,31 +85,28 @@ void start_gyro(void)
   
   HalI2CInit(GYRO_I2C_ADDRESS,   i2cClock_533KHZ);   //select the gyro
   
-   //turn on all axes and lock clock to x
-  uint8 command = ~GYRO_PWR_MGM_STBY_ALL | GYRO_PWR_MGM_CLOCK_PLL_X | GYRO_PWR_MGM_SLEEP;
+   //turn on all axes and lock clock to y
+  //uint8 command = ~GYRO_PWR_MGM_STBY_ALL | GYRO_PWR_MGM_CLOCK_INT_OSC | GYRO_PWR_MGM_SLEEP;
+  uint8 command = GYRO_PWR_MGM_CLOCK_INT_OSC;
   HalSensorWriteReg(GYRO_REG_PWR_MGM, &command,1);
   
   command = GYRO_INT_LATCH | GYRO_INT_CLEAR| GYRO_INT_DATA;
   HalSensorWriteReg(GYRO_REG_INT_CFG, &command, 1);
   
-  //initialize fifo bank
- // command = GYRO_FIFO_T | GYRO_FIFO_X | GYRO_FIFO_Y | GYRO_FIFO_Z;
- // HalSensorWriteReg(GYRO_REG_FIFO_EN, &command, 1);
   
   //set sensor poll rate
-  command = 0xff;
+  //Fsample = Finternal / (divider+1)
+  command = 0 ;         //8 ms sample time
   HalSensorWriteReg(GYRO_REG_SMPLRT_DIV, &command, 1);
+  
+  //Finternal = 1kHz; Range = +-1000 s^-1; 188Hz LPF
+  command = GYRO_DLPF_256 | GYRO_FS_2000;       
+  HalSensorWriteReg(GYRO_REG_DLPF_FS, &command, 1);
 }
 
 void read_gyro()
 { 
-  uint8 byte;
-
   HalI2CInit(GYRO_I2C_ADDRESS,   i2cClock_533KHZ);   //select the gyro
-  
-  byte = GYRO_I2C_ADDRESS;
-  flush_byte(&byte);
- 
   burstRead(GYRO_REG_GYRO_XOUT_H, 6);
 }
   
@@ -142,31 +139,6 @@ void gyro_sleep(bool sleep)
   HalSensorWriteReg(GYRO_REG_PWR_MGM , &power_mode, 1);
 }
 
-void zero_gyro(void)
-{
-  uint8 val;
-  uint8 oldState;
-  
-  HalI2CInit(GYRO_I2C_ADDRESS,   i2cClock_533KHZ);
-  
-
-  //Read current values and set as offsets
-  HalSensorReadReg(GYRO_REG_GYRO_XOUT_H,&val,1);
-  HalSensorWriteReg(GYRO_REG_XOFFS_USRH, &val, 1);
-  HalSensorReadReg(GYRO_REG_GYRO_XOUT_L,&val,1);
-  HalSensorWriteReg(GYRO_REG_XOFFS_USRL, &val, 1);
-  
-  HalSensorReadReg(GYRO_REG_GYRO_YOUT_H,&val,1);
-  HalSensorWriteReg(GYRO_REG_YOFFS_USRH, &val, 1);
-  HalSensorReadReg(GYRO_REG_GYRO_YOUT_L,&val,1);
-  HalSensorWriteReg(GYRO_REG_YOFFS_USRL, &val, 1);
-  
-  HalSensorReadReg(GYRO_REG_GYRO_ZOUT_H,&val,1);
-  HalSensorWriteReg(GYRO_REG_ZOFFS_USRH, &val, 1);
-  HalSensorReadReg(GYRO_REG_GYRO_ZOUT_L,&val,1);
-  HalSensorWriteReg(GYRO_REG_ZOFFS_USRL, &val, 1);
-  
-}
 /****************************************************************************
  Accelerometer
 *****************************************************************************/
@@ -177,12 +149,8 @@ void init_acc(void)
     
   uint8 command = 0x00;          //put to sleep
   HalSensorWriteReg(ACC_CTRL_REG1, &command, 1);
-  
-  //Set the resolution to 8G
-  command = ACC_GSEL1 | ACC_RES; 
-  HalSensorWriteReg(ACC_CTRL_REG1, &command, 1);
-  
-    //configure CTRL2 - 6.25Hz
+    
+  //configure CTRL2 - 6.25Hz
   command = ACC_OWUFB | ACC_OWUFC;
   HalSensorWriteReg(ACC_CTRL_REG2, &command, 1);
   
@@ -193,6 +161,10 @@ void init_acc(void)
   //Enable interrupt for all axes
   command = ACC_ALLWU;
   HalSensorWriteReg(ACC_INT_CTRL_REG2, &command, 1);
+  
+  //Set the resolution to 8G and power on
+  command = ACC_GSEL0 | ACC_GSEL1 | ACC_RES | ACC_PC1 | ACC_DRDYE; 
+  HalSensorWriteReg(ACC_CTRL_REG1, &command, 1);
 }
 
 
@@ -220,13 +192,8 @@ void acc_sleep(bool sleep)
 
 void read_acc(void)
 { 
-  uint8 byte;
 
   HalI2CInit(ACC_I2C_ADDRESS, i2cClock_267KHZ);
-  
-  byte = ACC_I2C_ADDRESS;
-  flush_data(&byte);
-  
    burstRead(ACC_XOUT_L, 6);
 }
 
@@ -251,20 +218,20 @@ void start_mag(void)
   HalSensorWriteReg(MAG_CTRL_2, &command, 1);
   
   //command = MAG_CTRL1_TM | MAG_640_5HZ| MAG_CTRL1_AC;  //Triggered updates at 5Hz
-  command = MAG_1280_40HZ | MAG_CTRL1_TM;
+  command = MAG_1280_40HZ | MAG_CTRL1_TM | MAG_CTRL1_AC;
   HalSensorWriteReg(MAG_CTRL_1, &command, 1);
 }
 
 void read_mag()
 { 
-  uint8 byte;
+ // uint8 byte;
 
   HalI2CInit(HAL_MAG3110_I2C_ADDRESS,i2cClock_267KHZ);
   
-  byte = HAL_MAG3110_I2C_ADDRESS;
-  flush_data(&byte);
+ // byte = HAL_MAG3110_I2C_ADDRESS;
+  //flush_data(&byte);
   
-  burstRead(MAG_X_LSB, 6);
+  burstRead(MAG_X_MSB, 6);
 }
 
 void mag_sleep(bool sleep)
@@ -293,21 +260,16 @@ void zero_mag(void)
   val &= ~MAG_CTRL1_AC;                 //Turn off polling
   HalSensorWriteReg(MAG_OFF_X_LSB, &val, 1);
   
-  //Read current values and set as offsets
-  HalSensorReadReg(MAG_X_LSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_X_LSB, &val, 1);
-  HalSensorReadReg(MAG_X_MSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_X_MSB, &val, 1);
+  uint8 idx = 6;
   
-  HalSensorReadReg(MAG_Y_LSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_Y_LSB, &val, 1);
-  HalSensorReadReg(MAG_Y_MSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_Y_MSB, &val, 1);
+  uint8 readREG  = MAG_X_MSB;
+  uint8 writeREG = MAG_OFF_X_MSB;
   
-  HalSensorReadReg(MAG_Z_LSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_Z_LSB, &val, 1);
-  HalSensorReadReg(MAG_Z_MSB,&val,1);
-  HalSensorWriteReg(MAG_OFF_Z_MSB, &val, 1);
+  while(idx--)
+  {
+    HalSensorReadReg(readREG++,&val,1);
+    HalSensorWriteReg(writeREG++, &val, 1);
+  }
   
   HalSensorWriteReg(MAG_OFF_X_LSB, &oldState, 1); //restore the old state
   
@@ -359,50 +321,66 @@ uint16 baro_capture_press(uint8 resolution)
     return delay;
 }
 
-void baro_read_press()
+uint8 baro_press[2] = {0,0};
+
+void baro_read_press(bool read)
 {
-   uint8  byte;
+   HalI2CInit(BARO_I2C_ADDRESS, i2cClock_267KHZ);
    
-   HalI2CInit(BARO_I2C_ADDRESS, i2cClock_267KHZ); 
+   uint8 checksum = 0x80;
+  
+   if (read ){
+   HalSensorReadReg(BARO_PRESS_LSB,&baro_press[0],1);
+   HalSensorReadReg(BARO_PRESS_MSB,&baro_press[1],1);
+   }
    
-   byte = BARO_I2C_ADDRESS;
-   flush_data(&byte);
+   checksum |= (baro_press[0] == 0);
+   checksum |= (baro_press[1] == 0) << 1;
    
-   burstRead(BARO_PRESS_LSB, 2);
+   flush_data(&baro_press[0]);
+   flush_data(&baro_press[1]);
+   flush_byte(&checksum);
+   
 }
 
 
-uint16 baro_capture_temp(uint8 resolution)
+uint16 baro_capture_temp(void)
 {
     HalI2CInit(BARO_I2C_ADDRESS, i2cClock_267KHZ); 
     
-    uint8 command = BARO_TEMP_READ_COMMAND;
-    uint16 delay;
-    
-        switch(resolution)
-        {
-        case 2  : command |= BARO_RES_2;  delay = 64;  break;
-        case 8  : command |= BARO_RES_8;  delay = 256; break;
-        case 16 : command |= BARO_RES_16; delay = 512; break;
-        case 64 : command |= BARO_RES_64; delay = 2048; break;
-        default : command |= BARO_RES_2;  delay = 64; break;
-        }
-        
+    uint8 command = BARO_TEMP_READ_COMMAND | BARO_RES_16;      
     HalSensorWriteReg(BARO_COMMAND_CTRL, &command, 1);
-    return delay;
+    return (uint16) 0xFA00;
 }
 
-void baro_read_temp()
+uint8 baro_temp[2] = {0,0};
+
+void baro_read_temp(bool read)
 {
-   uint8 byte;
-   
-   byte = BARO_I2C_ADDRESS;
-   flush_data(&byte);
-   
    HalI2CInit(BARO_I2C_ADDRESS, i2cClock_267KHZ); 
    
-   burstRead(BARO_TEMP_LSB, 2);
+   uint8 checksum = 0x80;
+  
+   if( read ){
+   HalSensorReadReg(BARO_TEMP_LSB,&baro_temp[0],1);
+   HalSensorReadReg(BARO_TEMP_MSB,&baro_temp[1],1);
+   }
+   
+   checksum |= (baro_temp[0] == 0);
+   checksum |= (baro_temp[1] == 0) << 1;
+   
+   flush_data(&baro_temp[0]);
+   flush_data(&baro_temp[1]);
+   flush_byte(&checksum);
 }
+
+
+void baro_read_cal(void)
+{
+  HalI2CInit(BARO_I2C_ADDRESS, i2cClock_267KHZ);
+  burstRead(BARO_CALIBRATION_1_LSB, 16); 
+}
+
 
 void baro_shutdown(void)
 {
@@ -431,39 +409,40 @@ void humid_init(void)
   HalSensorWriteReg(HUMID_WRITE_U_R,&humid_usr,1);
 }
 
+ uint8 humid_buffer[3] = {0,0,0};
 
-void humid_read_humidity(void)
+void humid_read_humidity(uint8 read)
 {
-  
-  uint8 buffer[3];
-  
   HalI2CInit(HUMID_I2C_ADDRESS,i2cClock_267KHZ);
   
-  uint8 byte = HUMID_I2C_ADDRESS;
-  flush_data(&byte);
+  //uint8 byte = HUMID_I2C_ADDRESS;
+  //flush_data(&byte);
   
-  HumidWriteCmd(HUMID_TEMP_T_H);
-  HumidReadData(buffer, DATA_LEN);
+  //HumidWriteCmd(HUMID_TEMP_T_H);
+  //HumidReadData(buffer, DATA_LEN);
   
-  buffer[1] &= ~0x03;
-  flush_data(&buffer[0]);
-  flush_data(&buffer[1]);
+  //buffer[1] &= ~0x03;
+  //flush_data(&buffer[0]);
+  //flush_data(&buffer[1]);
+  
+  if (read)
+  {
+    HumidWriteCmd(HUMID_HUMI_T_H);
+    HumidReadData(&humid_buffer[0], DATA_LEN);
+    
+    //clear last 2 lsb bits and transmit MSB first
+    humid_buffer[1] &= ~0x03;
+  }
   
   
-  HumidWriteCmd(HUMID_HUMI_T_H);
-  HumidReadData(buffer, DATA_LEN);
+  flush_data(&humid_buffer[0]);
+  flush_data(&humid_buffer[1]);
   
-  buffer[1] &= ~0x03;
-  flush_data(&buffer[0]);
-  flush_data(&buffer[1]);
+  //compute checksum
+  humid_buffer[2] = (humid_buffer[2] == 0) | (humid_buffer[2] == 0) << 1 | 0x80;
   
-  buffer[0] = (buffer[0] == 0) | 
-              (buffer[0] == 0) << 1 |
-              (buffer[0] == 0) << 2 |
-              (buffer[0] == 0) << 3 |
-               0xF0;
+  flush_data(&humid_buffer[2]);
   
-  flush_data(&buffer[0]);
 }
 
 

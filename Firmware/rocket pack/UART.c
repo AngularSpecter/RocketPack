@@ -15,9 +15,16 @@ void init_radio_UART(void)
     // Configure UART 0
     UCA0CTLW0 = UCSWRST;				   // Put UART in reset (off) mode
 
-    UCA0CTLW0 |= 0x0040;				   // Use ACLK;  8n1 implied as default setting
-    UCA0BRW    = 0x0003;                   // 9600 baud
-    UCA0MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
+    //UCA0CTLW0 |= 0x0040;				   // Use ACLK;  8n1 implied as default setting
+    //UCA0BRW    = 0x0003;                   // 9600 baud
+    //UCA0MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
+
+
+   // UCOS16 = 1; UCBR0 = 130;  UCBRF0 = 3; UCBRS0 = 0x25
+    UCA0CTLW0 |= 0x00C0;				   // Use SMCLK;  8n1 implied as default setting
+    UCA0BRW    = 130;
+    UCA0MCTLW = 1 | 0x0030 | 0x2500;
+
 
     UCA0CTL1 &= ~UCSWRST;                  // release from reset
 }
@@ -70,9 +77,14 @@ UARTERROR init_db_UART(void)
     // Configure UART 0
     UCA1CTLW0 = UCSWRST;				   // Put UART in reset (off) mode
 
-    UCA1CTLW0 |= 0x0040;				   // Use ACLK;  8n1 implied as default setting
-    UCA1BRW    = 0x0003;                   // 9600 baud
-    UCA1MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
+    //UCA1CTLW0 |= 0x0040;				   // Use ACLK;  8n1 implied as default setting
+    //UCA1BRW    = 0x0003;                   // 9600 baud
+    //UCA1MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
+
+    //UCOS16 = 1; UCBR0 = 130;  UCBRF0 = 3; UCBRS0 = 0x25
+    UCA1CTLW0 |= 0x00C0;				   // Use SMCLK;  8n1 implied as default setting
+    UCA1BRW    = 130;
+    UCA1MCTLW = 1 | 0x0030 | 0x2500;
 
     UCA1CTL1 &= ~UCSWRST;                  // release from reset
 
@@ -149,8 +161,9 @@ __interrupt void USCI_A1_ISR(void)
   case 0:							// Vector 0 - no interrupt
 	  break;
   case 2:                           // Vector 2 - RXIFG
-	  dbRXERROR = db_buffer_push(UCA1RXBUF);
-	  LPM0_EXIT;
+	  //dbRXERROR = db_buffer_push(UCA1RXBUF);
+	  //LPM0_EXIT;
+	  radio_send_byte(UCA1RXBUF);
 	  break;
   case 4:    						// Vector 4 - TXIFG
 	  break;
