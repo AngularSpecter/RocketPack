@@ -1,0 +1,70 @@
+*** Rocket Pack************************************
+
+Project Synopsis
+--------------------
+
+Rocket pack is a development board based around the MSP430FR5739 microcontroller
+and the Digi Xbee S3B Pro 900MHz zigbee radio.  The board is intended to 
+facilitate broadcasting real time, high-rate sensor data over a range of several
+hundred meters.  The board is designed to interface with custom built sensor 
+packages, or with the TI sensorTag development board running custom firmware
+
+
+Power Supply
+----------------------
+The board has on-board battery management designed specifically for single cell
+lipo batteries, but will also take any voltage source between 3.3V and 5VDC.
+The regualted 3.2V rail is availible on all three expansion headers as well as 
+the CCdebugger header, which is designed specifically to power the sensorTag
+development board.   
+
+
+
+Communications
+----------------------
+The MSP430FR5739 contains two hardware USART's.  One USART is reserved for the
+zigbee radio, while the other is broken out to both the serial data header and 
+the ez430 programming/debug header.  All signals reqired for I2C, SPI or UART 
+are availible on the serial data header
+
+
+
+SensorTag
+----------------------
+
+
+
+
+ Errata
+ ---------------------
+ 
+ V0.1:
+       Debug header location:  The location of the debug header interferes with 
+       nearby pin headers, making it impossible to populate the debug header 
+       with a right angle header and .1" pitch pin header.
+       
+       Specified load capacitors on the crystal are wrong.  The crystal will 
+       stabilize on boot, but will not remain.
+       
+       Radio CONFIG pin is wired to MCU to allow easy entrance into command
+       mode.  This should be connected to a different pin.
+       
+       
+       
+TO DO
+------------------------
+
+1.  MS430Firmware:  1.  Startup sleep mode -> poll mag and exit on high value
+                    2.  Startup procedure -> broadcast calibration data
+                    3.  Startup procedure -> read radio ID to store UID
+                    4.  TX mirror         -> Prepend UID to TX'd packets
+                    
+2.  SensorTag       1.  Clean up firmware  -> remove deadwood
+                    2.  
+                    
+3.  Labview         1.  Radio interface  ->  AT command mode control to select
+                                             radio to listen to
+                    2.  Sensor interface ->  Formalize calibration code
+                    3.  Sensor interface ->  Formalize data processing
+                    4.  Sensor interface ->  Add "remote globals"
+                      
