@@ -8,11 +8,17 @@
 
 void UART_init(void);
 void calcBAUD(unsigned int baud, unsigned char *M, unsigned char *E);
-void flushByte(uint8* txbuffer);
+void repeatBytes(uint8 byte, uint8 count);
+void flush_data(uint8* txbuffer);
+void flush_byte(uint8* txbuffer);
 void sendByte(uint8* txbuffer);
 void uartSend( char *pucData, unsigned char ucLength);
+<<<<<<< HEAD
 void uart_send_data(uint16 data);
 void uart_send_buffer(uint16 *buffer, uint8 len);
 void itoa(uint16 val, char *str, uint16 limit);
 void send_ACK(void);
 void send_NACK(void);
+=======
+void uart_send_data(uint16 *buffer, uint8 len);
+>>>>>>> origin/streamlined

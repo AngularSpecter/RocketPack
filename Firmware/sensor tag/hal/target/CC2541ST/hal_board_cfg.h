@@ -264,14 +264,14 @@
   PREFETCH_ENABLE();                                             \
                                                                  \
   /* set direction for GPIO outputs  */                          \
-  LED1_DDR |= LED1_BV;                                           \
-  LED2_DDR |= LED2_BV;                                           \
+ /* LED1_DDR |= LED1_BV;    */                                       \
+ /* LED2_DDR |= LED2_BV;  */                                          \
   GYRO_VDD_DDR |= GYRO_VDD_BV;                                   \
   DCDC_DDR |= DCDC_BV;     /* Set P0_7 as output */              \
   GYRO_VDD_SBIT = 1;       /* Gyro must be on for I2C to work */ \
   P0DIR |= BV(5);          /* Unused pin as output */            \
   P2DIR |= BV(0);          /* Unused pin as output */            \
-  P1DIR |= 0x3C;          /* UART pins as output */             \
+  /* P1DIR |= 0x3C; */         /* UART pins as output */             \
   P0INP =  0x4E;           /* Tri-state inputs */                \
   P0_7 = 1;                                                      \
 }

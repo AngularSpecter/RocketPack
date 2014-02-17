@@ -27,9 +27,14 @@ void UART_init(void)
   U0GCR |= E;  //BAUD_E
   U0BAUD |= M; //BAUD_M  
   
+<<<<<<< HEAD
   //U0GCR |= BV(5);  //Set to MSB first
   
   //U0CSR &= ~BV(2);  //Clear the buffer
+=======
+  //U0GCR |= BV(5);
+  
+>>>>>>> origin/streamlined
   U0UCR |= BV(7);   //Flush the UART
   
   ENABLE_RX();   //Start the receiver
@@ -62,13 +67,26 @@ void sendByte(uint8* txbuffer)
     U0DBUF =  (unsigned char)*txbuffer; 
 }
 
+void repeatBytes(uint8 byte, uint8 count)
+{
+  while(count--) flush_byte(&byte);
+}
 
-void flushByte(uint8* txbuffer)
+void flush_data(uint8* txbuffer)
+{
+   unsigned char buffer = (unsigned char)*txbuffer;
+   buffer = (buffer == 0) ? 0x01 : buffer;
+   U0DBUF =  buffer; 
+    while(U0CSR & BV(0));                        //wait until tx is finished
+}
+
+void flush_byte(uint8* txbuffer)
 {
     U0DBUF =  (unsigned char)*txbuffer; 
     while(U0CSR & BV(0));                        //wait until tx is finished
 }
 
+<<<<<<< HEAD
 void send_ACK(void)
 {
   U0DBUF = 0xff;
@@ -81,6 +99,8 @@ void send_NACK(void)
   while(U0CSR & BV(0)); 
 }
   
+=======
+>>>>>>> origin/streamlined
 void uartSend(char *pucData, unsigned char ucLength) 
 {
   while(ucLength--)
@@ -129,29 +149,4 @@ void uart_send_buffer(uint16 *buffer, uint8 len)
        
     U0DBUF = '\r';
     U0DBUF = '\n';   
-}
-
-void itoa(uint16 val, char *str, uint16 limit)
-{
-  int temploc = 0;
-  int digit = 0;
-  int strloc = 0;
-  char tempstr[5]; //16-bit number can be at most 5 ASCII digits;
-  char *outstr;
-  
-  if(val>limit)
-    val %= limit;
- 
-  do
-  {
-    digit = val % 10;
-    tempstr[temploc++] = digit + '0';
-    val /= 10;
-  } while (val > 0);
- 
-  // reverse the digits back into the output string
-  while(temploc>0)
-    str[strloc++] = tempstr[--temploc];
- 
-  str[strloc]=0;
 }

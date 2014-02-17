@@ -10,8 +10,14 @@ void sensors_init(void);
 void sensor_int_init(void);
 void start_interrupts(uint8 mask);
 void stop_interrupts(uint8 mask);
+<<<<<<< HEAD
 bool read_sensor(uint8 device);
 
+=======
+void burstRead(uint8 startADD, uint8 n_buffers);
+
+//sensor interrupts 
+>>>>>>> origin/streamlined
 #define GYRO_INT        BV(1)
 #define ACC_INT         BV(2)
 #define MAG_INT         BV(6)
@@ -19,6 +25,9 @@ bool read_sensor(uint8 device);
 
 #define DCDC_ON          st(P0_7 = 1;);
 #define DCDC_OFF         st(P0_7 = 0;);
+
+
+
 
 /*----------------------------------------------------------------------
   Gyro
@@ -46,10 +55,26 @@ bool read_sensor(uint8 device);
 #define GYRO_REG_AUX_VDDIO                  0x13 // R/W
 #define GYRO_REG_AUX_SLV_ADDR               0x14 // R/W
 #define GYRO_REG_SMPLRT_DIV                 0x15 // R/W
+
 #define GYRO_REG_DLPF_FS                    0x16 // R/W
 
-#define GYRO_REG_AUX_BURST_ADDR             0x18 // R/W
+//DLPF_CFG                    Low Pass Filter Bandwidth     Analog Sample Rate
+#define GYRO_DLPF_256  0x00   //         256Hz                      8kHz
+#define GYRO_DLPF_188  0x01   //         188Hz                      1kHz
+#define GYRO_DLPF_98   0x02   //         98Hz                       1kHz
+#define GYRO_DLPF_42   0x03   //         42Hz                       1kHz
+#define GYRO_DLPF_20   0x04   //         20Hz                       1kHz
+#define GYRO_DLPF_10   0x05   //         10Hz                       1kHz
+#define GYRO_DLPF_5    0x06   //         5Hz                        1kHz
 
+//Full scale range
+#define GYRO_FS_250   0x00    // ±250°/sec
+#define GYRO_FS_500   0x08    // ±500°/sec
+#define GYRO_FS_1000  0x10    // ±1000°/sec
+#define GYRO_FS_2000  0x18    // ±2000°/sec
+
+
+#define GYRO_REG_AUX_BURST_ADDR             0x18 // R/W
 
 // Sensor data registers
 #define GYRO_REG_TEMP_OUT_H                 0x1B // R
@@ -139,9 +164,16 @@ bool read_sensor(uint8 device);
 #define GYRO_PWR_MGM_CLOCK_STOP             0x07
 
 void start_gyro(void);
+<<<<<<< HEAD
 void read_gyro(void);
 void read_gyro_temp(void);
 
+=======
+void read_gyro();
+void read_gyro_temp(uint16 *buffer);
+uint8 gyro_int_status(void);
+void gyro_sleep(bool sleep);
+>>>>>>> origin/streamlined
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -259,10 +291,17 @@ Accelerometer
 #define ACC_SELF_TEST                           0x3A
 
 void init_acc(void);
+<<<<<<< HEAD
 //void acc_int_mode(bool interrupt);
 //void acc_sleep(bool sleep);
 void read_acc(void);
 
+=======
+void acc_int_mode(bool interrupt);
+void acc_sleep(bool sleep);
+void read_acc(void);
+uint8 acc_int_status(void);
+>>>>>>> origin/streamlined
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -357,10 +396,17 @@ Magnetometer
 
 
 void start_mag(void);
+<<<<<<< HEAD
 //void mag_sleep(bool sleep);
 void read_mag(void);
 //void zero_mag(void);
 //uint8 mag_status(void);
+=======
+void mag_sleep(bool sleep);
+void read_mag();
+void zero_mag(void);
+uint8 mag_status(void);
+>>>>>>> origin/streamlined
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -402,10 +448,10 @@ Barometer
   
 /** Data Read Registers
 */  
-#define BARO_TEMP_LSB              0xF3 // Read
-#define BARO_TEMP_MSB              0xF4 // Read
+#define BARO_TEMP_LSB              0xF5 // Read
+#define BARO_TEMP_MSB              0xF6 // Read
 
-#define BARO_PRESS_LSB       	    0xF5 // Read
+#define BARO_PRESS_LSB       	   0xF5 // Read
 #define BARO_PRESS_MSB             0xF6 // Read
 
 // C953 Register Addresses for calibration coefficients
@@ -428,18 +474,26 @@ Barometer
 
 
 // C953 Commands
-#define BARO_TEMP_READ_COMMAND		( BARO_TEMP | 0x01 )
-#define BARO_PRESS_READ_COMMAND		( BARO_PRESS| 0x01 )
+#define BARO_TEMP_READ_COMMAND		( BARO_TEMP  | 0x01 )
+#define BARO_PRESS_READ_COMMAND		( BARO_PRESS | 0x01 )
 #define BARO_OFF_COMMAND		0x00
 #define BARO_RESET_COMMAND              0x73
 
 void start_baro(void);
 uint16 baro_capture_press(uint8 resolution);
+<<<<<<< HEAD
 void baro_read_press(void);
 uint16 baro_capture_temp(uint8 resolution);
 void baro_read_temp(void);
 //void baro_shutdown(void);
 
+=======
+void baro_read_press(bool read);
+uint16 baro_capture_temp(void);
+void baro_read_temp(bool read);
+void baro_shutdown(void);
+void baro_read_cal(void);
+>>>>>>> origin/streamlined
 
 /*------------------------------------------------------------------------------
 ###############################################################################
@@ -485,6 +539,10 @@ Humidity
 */
 
 void humid_init(void);
+<<<<<<< HEAD
 void humid_read_humidity(void);
+=======
+void humid_read_humidity(uint8 mode);
+>>>>>>> origin/streamlined
 static bool HumidWriteCmd(uint8 cmd);
 static bool HumidReadData(uint8 *pBuf, uint8 nBytes);
