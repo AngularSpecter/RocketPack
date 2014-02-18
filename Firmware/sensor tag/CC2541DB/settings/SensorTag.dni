@@ -9,11 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-<<<<<<< HEAD
-Checksum=-1372828438
-=======
 Checksum=1643108873
->>>>>>> origin/streamlined
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -57,59 +53,6 @@ Fmt23={W}0:P2SEL	1	0
 Fmt24={W}0:PCON	1	0
 Fmt25={W}0:PERCFG	1	0
 Fmt26={W}0:RXbuffer	4	0
-<<<<<<< HEAD
-Fmt27={W}0:SLEEPSTA	1	0
-Fmt28={W}0:SRCRC	1	0
-Fmt29={W}0:ST0	4	0
-Fmt30={W}0:ST1	4	0
-Fmt31={W}0:ST2	4	0
-Fmt32={W}0:STIE	3	0
-Fmt33={W}0:STIF	3	0
-Fmt34={W}0:STLOAD	1	0
-Fmt35={W}0:T1CNTH	2	0
-Fmt36={W}0:T1CNTL	3	0
-Fmt37={W}0:T1CTL	1	0
-Fmt38={W}0:T1STAT	1	0
-Fmt39={W}0:T3CNT	3	0
-Fmt40={W}0:TIMIF	1	0
-Fmt41={W}0:U0BAUD	3	0
-Fmt42={W}0:U0CSR	1	0
-Fmt43={W}0:U0DBUF	4	0
-Fmt44={W}0:U0GCR	3	0
-Fmt45={W}0:U0UCR	1	0
-Fmt46={W}0:buf	3	0
-Fmt47={W}0:buffer	3	0
-Fmt48={W}0:byteRX	3	0
-Fmt49={W}0:byte_number	3	0
-Fmt50={W}0:bytes_to_proc	3	0
-Fmt51={W}0:current_byte	4	0
-Fmt52={W}0:delay_ticks	3	0
-Fmt53={W}0:i	3	0
-Fmt54={W}0:loop_Counter	3	0
-Fmt55={W}0:mag[6]	3	0
-Fmt56={W}0:mode	4	0
-Fmt57={W}0:power_mode	1	0
-Fmt58={W}0:sensorReady	1	0
-Fmt59={W}0:sensorUpdated	1	0
-Fmt60={W}0:sleepTimer	3	0
-Fmt61={W}0:status	1	0
-Fmt62={W}0:str	3	0
-Fmt63={W}0:temp	3	0
-Fmt64={W}0:timeout	4	0
-Fmt65={W}0:ucLength	3	0
-Fmt66={W}0:v	1	0
-Fmt67={W}0:v & DATA_RDY_BIT	3	0
-Fmt68={W}0:val	3	0
-Fmt69={W}0:val1	3	0
-Fmt70={W}0:val2	3	0
-Fmt71={W}0:voltage	3	0
-Fmt72={W}0:~(sensorReady & 0x0E)	1	0
-Fmt73={W}0:~(unsigned char)(STLOAD & 0x01)	4	0
-Fmt74={W}0:~(unsigned int)(STLOAD & 0x01)	3	0
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\include\hal_sleep.h}.21.1" 0 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\sensors.h}.107.1" 0 0 0 0 "" 0 ""
-=======
 Fmt27={W}0:RXin	3	0
 Fmt28={W}0:SLEEPSTA	1	0
 Fmt29={W}0:SRCRC	1	0
@@ -173,18 +116,10 @@ LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\include\hal_sleep.h}.21.1" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\sensors.h}.127.1" 0 0 0 0 "" 0 ""
->>>>>>> origin/streamlined
 Count=2
 [ChipconEmu]
 Stop timers on halt=0
 Leave target running=1
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
