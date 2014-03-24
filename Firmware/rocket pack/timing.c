@@ -1,5 +1,4 @@
 #include "timing.h"
-#include "types.h"
 
 
 //TB1 and TB2 pins are completely used by alternate modules and should be used first for internal timing
@@ -22,15 +21,22 @@ void delay(uint16 ticks)
 
 	__bis_SR_register(LPM0_bits + GIE);  //go to sleep
 
-	TB1CTL   &= ~(MC__CONTINUOUS);		 //shut down the timer
-	TB1CCTL0 &= ~CCIE;		     //Kill the CCR interrupt
+	delay_cancel();
 }
+
+void delay_cancel(void)
+{
+	TB1CTL   &= ~(MC__CONTINUOUS);		 //shut down the timer
+	TB1CCTL0 &= ~CCIE;		             //Kill the CCR interrupt
+}
+
 
 //CCR interrupt
 #pragma vector=TIMER1_B0_VECTOR
 __interrupt void TIMER1_B0_ISR(void)
 {
 	LPM0_EXIT;
+	delay_cancel();
 }
 
 //Timer overflow interrupt
@@ -38,5 +44,40 @@ __interrupt void TIMER1_B0_ISR(void)
 __interrupt void TIMER1_B1_ISR(void)
 {
 	LPM0_EXIT;
+	delay_cancel();
 }
+
+
+/*** Heartbeat interval timer ******************************************************/
+
+unsigned int heartbeat_cnt;
+const unsigned int heartbeat_int = WDTINT_1s;
+
+
+void start_heartbeat(void)
+{
+	WDTCTL = WDTPW | WDTTMSEL | WDTSSEL__ACLK | heartbeat_int;
+	SFRIE1 |= WDTIE;
+}
+
+void stop_heartbeat(void)
+{
+	WDTCTL = WDTPW | WDTHOLD;
+	SFRIE1 &= ~WDTIE;
+}
+
+void wdt_force_puc(void)
+{
+	WDTCTL = (WDTPW + 1);  //write the wrong pw to force a PUC
+}
+
+#pragma vector = WDT_VECTOR
+__interrupt void WDT_TIMER_ISR(void)
+{
+	heartbeat_cnt++;
+	LPM0_EXIT;
+}
+
+
+
 

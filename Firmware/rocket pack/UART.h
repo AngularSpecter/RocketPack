@@ -1,6 +1,10 @@
+#ifndef UART_h
+#define UART_h
+
 #include <msp430FR5739.h>
 #include "types.h"
-#include "radio.h"
+
+
 
 #define TXCMPLT		UCTXCPTIE       /* UART Transmit Complete Interrupt Enable */
 #define TXIE		UCTXIE          /* UART Transmit Interrupt Enable */
@@ -9,35 +13,36 @@
 #define RADIOISR	UCA0IE
 #define DBISR	    UCA1IE
 
-typedef enum {
-	NOERROR,		//everything is fine
-	OVERFLOW_NA,	//buffer write overflow detected...buffer write not allowed
-	OVERFLOW_WA,	//buffer write overflow detected...buffer write allowed
-	BUFFEREMPTY	,	//tried to read an empty buffer.
-	INVALIDOPTION	//Invalid option supplied
-}UARTERROR;
+#define RADIO_RX_BUFFER_LEN  10
+#define RADIO_TX_BUFFER_LEN  100
 
+#define DB_RX_BUFFER_LEN  100
+#define DB_TX_BUFFER_LEN  10
 
-
-void bridge_buffer(void);
-
-
-
+extern volatile unsigned char RADIORXflag;
 extern volatile unsigned char dbRXflag;
-extern volatile UARTERROR dbRXERROR;
-extern volatile UARTERROR dbTXERROR;
-extern volatile unsigned int db_bytes_to_proc;
 
+extern UART_buffer radio_rx_buffer;
+extern UART_buffer radio_tx_buffer;
 
-typedef enum {READ, WRITE} dbBuffPos;
+extern UART_buffer db_rx_buffer;
+extern UART_buffer db_tx_buffer;
 
-UARTERROR init_db_UART(void);
-UARTERROR db_send_byte(unsigned char byte);
-UARTERROR db_buffer_push(unsigned int value);
-UARTERROR db_buffer_pop(volatile unsigned int *dest);
-UARTERROR db_spy_buffer(dbBuffPos whichBuffer, uint8 *value);
+//extern unsigned int radio_rx_buffer_array[RADIO_RX_BUFFER_LEN];
+//extern unsigned int radio_tx_buffer_array[RADIO_TX_BUFFER_LEN];
 
-
+//extern unsigned int db_rx_buffer_array[DB_RX_BUFFER_LEN];
+//extern unsigned int db_tx_buffer_array[DB_TX_BUFFER_LEN];
+/*****************************************************************/
 void init_radio_UART(void);
 void radio_send_byte(unsigned char byte);
-void radio_send_string(unsigned char* string);
+void radio_send_string(char* string);
+void radio_set_term(volatile unsigned char value);
+void radio_tx_command(void);
+UARTERROR radio_wait(uint16 timeout);
+
+/**************************************************************/
+UARTERROR init_db_UART(void);
+UARTERROR db_send_byte(unsigned char byte);
+
+#endif

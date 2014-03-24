@@ -1,11 +1,24 @@
+#ifndef RADIO_h
+#define RADIO_h
+
 #include <msp430FR5739.h>
 #include "types.h"
-#include "timing.h"
+
 
 #define STATUS  BIT4
 #define SLEEP   BIT5
 #define CONFIG  BIT6
 #define RESET	BIT7
+
+#define HOSTDISC   0x01   //Broadcast by the host to the base station to announce its presence.
+#define CMD        0x02   //Base -> node: command for remote node to execute
+                          //node -> base: return of command
+#define CAL        0x03   //Base -> node: Request calibration data
+                          //node -> base: Return calibration data
+#define DATA       0x04   //node -> base: Data
+#define NSEL       0x05   //base -> node: address of node to be active..all other sleep
+#define RADIOACK   0x06   //command ACK
+#define RADIONACK  0x07   //command NACK
 
 
 extern volatile unsigned int radio_command_mode;
@@ -122,3 +135,12 @@ extern volatile unsigned int radio_command_mode;
 
 void config_radio(void);
 void sleep_radio(char mode);
+char radio_enter_CMD(void);
+char radio_proc_ack(unsigned int * buffer);
+char radio_leave_CMD(void);
+char radio_set_value(char * reg, char * value);
+char radio_read_value(char * reg, unsigned int * value);
+char radio_write_changes(void);
+
+unsigned int str2dec(unsigned int * string);
+#endif

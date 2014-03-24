@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1643108873
+Checksum=-1921419019
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -106,10 +106,6 @@ Fmt76={W}0:voltage	3	0
 Fmt77={W}0:~(sensorReady & 0x0E)	1	0
 Fmt78={W}0:~(unsigned char)(STLOAD & 0x01)	4	0
 Fmt79={W}0:~(unsigned int)(STLOAD & 0x01)	3	0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -118,8 +114,12 @@ Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\include\hal_sleep.h}.21
 Bp1=_ "STD_CODE" "{$PROJ_DIR$\..\Source\sensors.h}.127.1" 0 0 0 0 "" 0 ""
 Count=2
 [ChipconEmu]
-Stop timers on halt=0
+Stop timers on halt=1
 Leave target running=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
 [Aliases]
 Count=0
 SuppressDialog=0

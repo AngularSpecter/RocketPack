@@ -23,8 +23,8 @@
 
  
 
-   //start up with all sensors running in ping-to-poll mode
-   uint8 active_sensors = BV(0) | BV(1) | BV(2) | BV(3) | BV(5);
+   //start up with all sensors sleeping
+   uint8 active_sensors = 0; //BV(0) | BV(1) | BV(2) | BV(3) | BV(5);
    
 volatile uint8 RXin = 1;
    
@@ -73,10 +73,20 @@ void main(void)
         
      if (RXin)
      {
+      //If it is a cal data request 
+      if ( active_sensors & BV(4) )
+      {
+        flag = 0x03;
+        flush_data(&flag);
+        baro_read_cal();
+        
+      } else if ( active_sensors > 0 ) {
+       
      //  P0_4 = 1;
     /**************************************************************************/
     /* Read and transmit sensor data                                          */
-    
+    flag = 0x04;
+    flush_byte(&flag);   
     flush_byte(&active_sensors);
      
     /*---------------------------------------------------------------------*/ 
@@ -179,23 +189,13 @@ void main(void)
     
     /*---------------------------------------------------------------------*/
 
-    
-    if ( active_sensors & BV(4) )
-    {
-      IDbyte = BV(4);
-      flush_data(&IDbyte);
-      baro_read_cal();
     }
     
     //End of line char
     flag = 0x00;
     flush_byte(&flag);
     
-   
-   // P0_4 = 0;
-      
-    
-    
+
     if ( !(active_sensors & BV(5)) )        //if autopoll is off
     {
       P0_4 = 1;

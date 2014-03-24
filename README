@@ -27,8 +27,73 @@ zigbee radio, while the other is broken out to both the serial data header and
 the ez430 programming/debug header.  All signals reqired for I2C, SPI or UART 
 are availible on the serial data header
 
+The firmware is written to buffer both inbound and outbound traffic.  The MCU 
+pops bytes into the rx buffers in low power mode.  Once a line term char is RX'd,
+LPM is exited and the full packet is processed.
+
+No data is transmitted until a full packet is buffered.  Then it is transmitted
+entirely before additional data is processed.  
 
 
+Node power up sequence
+-----------------------------------
+
+sleep loop
+-----------
+1. Boot
+2. Hold sensors in reset
+3. Read and store radio address
+4. Boot sensors
+5. Read and store cal data
+6. Sleep sensors
+
+{
+Auto discovery
+---------------------
+1. Poll magentometer
+2. Broadcast host discover on trigger
+3. Repeat until node select rxd
+4. TX ACK
+}
+
+Wake up loop (on rx of node select)
+-------------
+7. TX ACK
+8. Wait for command
+   8a. Send cal data
+   8b. Start data stream
+  
+On ~node select
+----------------
+1. Sleep sensors
+2. Wait for wake up 
+
+  Packet Formatting
+  -----------------------------------------
+  [0x01] [address] [0x00]
+  host discover   0x01     Broadcast by the host to the base station to announce
+                           its presence.
+  [0x02] [command] [data] [0x00]                         
+  command         0x02     Base -> node: command for remote node to execute
+                           node -> base: return of command
+                           
+                  commands
+                     0x01  Stop transmitting data
+                     0x02  Start transmitting data
+                     0x03  Change sensor profile
+                     0x04  Reboot         
+  
+  
+  cal data        0x03     Base -> node: Request calibration data 
+                           node -> base: Return calibration data   
+  
+  data packet     0x04     node -> base: Data 
+
+  node select     0x05     base -> node: address of node to be active..all other sleep
+
+  ACK             0x06     command ACK
+  
+  NACK            0x07     command NACK
 SensorTag
 ----------------------
 
