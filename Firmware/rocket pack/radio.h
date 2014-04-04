@@ -10,6 +10,15 @@
 #define CONFIG  BIT6
 #define RESET	BIT7
 
+/*packet formatting:
+
+NSEL       :   [NSEL] [address] [0x00]
+CAL        :   [CAL] [0x00]
+DATA       :   [DATA] [sensor mask] [Timeout] [0x00]
+HOSTDISC   :   [HOSTDISC] [0x00]
+
+*/
+
 #define HOSTDISC   0x01   //Broadcast by the host to the base station to announce its presence.
 #define CMD        0x02   //Base -> node: command for remote node to execute
                           //node -> base: return of command

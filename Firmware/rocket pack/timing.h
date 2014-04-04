@@ -16,14 +16,15 @@
 #define TBSSEL_SMCLK     TBSSEL_2    /* Clock Source: SMCLK */
 #define TBSSEL_INCLK     TBSSEL_3    /* Clock Source: INCLK */
 
-inline void init_delay(void);
+void init_delay(void);
 void delay(uint16 ticks);
 void delay_cancel(void);
 
-
+void hs_interval_start(uint16 ticks);
+void hs_interval_stop(void);
 
 /*** Watchdog timer heartbeat ************************/
-extern unsigned int heartbeat_cnt;
+extern unsigned int      heartbeat_cnt;
 
 #define WDTINT_181216    0x00
 #define WDTINT_010816    0x01

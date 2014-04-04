@@ -7,8 +7,8 @@
 void config_radio(void)
 {
 	init_radio_UART();
-	P3DIR &= ~(STATUS + RESET); //make sure the status pin is an input
-	P3DIR |= SLEEP + CONFIG;    //sleep, config pins are outputs
+	P3DIR &= ~(STATUS + RESET + SLEEP + CONFIG); //make sure the status pin is an input
+	//P3DIR |= SLEEP + CONFIG;    //sleep, config pins are outputs
 }
 
 

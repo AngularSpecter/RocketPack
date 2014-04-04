@@ -4,19 +4,23 @@
 #include "buffer.h"
 #include "radio.h"
 #include "sensorTag.h"
-
 #include "timing.h"
 
 volatile unsigned char dbRXflag      = 0;
-         uint16        radioAddress  = 0;
+         uint16        radioAddress  = 0xff;
    const unsigned int  magTrigger    = 0;
          unsigned int  sensorMask    = 0;
      static const int  mag_poll_cnt  = 1;
 
+     unsigned char     heartbeat_TO  = 0;
+
 
 void main(void) {
+
+	uint16 poll_rate = 1100;
+
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
-	
+
     mode proc_mode = SLEEPWAIT;
 
     //Initialize the SensorTag daughter board and hold in reset
@@ -40,7 +44,7 @@ void main(void) {
 
     /*** Configure Radio UART ( UCA0 ) *****************/
     config_radio();					        //configure UART
-    sleep_radio(FALSE);
+    sleep_radio(TRUE);
     RADIOISR |=  RXIE;					    //enable rx interrupt
 
 
@@ -54,8 +58,8 @@ void main(void) {
 
     /* Read the current address from the radio */
 
-	while (!success)    //loop until we can communicate with the radio
-	{
+	//while (!success)    //loop until we can communicate with the radio
+	//{
 		//Read and cache the radio address
 		success = radio_enter_CMD();
 		if (success)
@@ -64,13 +68,17 @@ void main(void) {
 		  if (success) success = radio_leave_CMD();
 		}
 
-		if(!success) delay(32768);
-	}
+		//if(!success) delay(32768);
+	//}
 
-
+	 radio_set_term(0x00);
      start_heartbeat();
 
 	 flush_buffer(&radio_rx_buffer);      //flush the command buffer
+
+
+
+
 
 	 /** Operating modes  *********************************
 	  *
@@ -139,7 +147,17 @@ void main(void) {
     		if (packet[0] == DATA &&  proc_mode == ACTIVEMODE )
     		{
     			sensorMask = packet[1];
-    			db_send_byte( sensorMask );
+    			heartbeat_TO = packet[2];
+    			heartbeat_cnt = 0;
+    			//db_send_byte( sensorMask );
+
+    			if ( packet[1] & 0x20 )
+    			{
+    				hs_interval_start(poll_rate);
+    			}else{
+    				hs_interval_stop();
+    			}
+
     		}
 
     		//An ACK packet in active mode is the heartbeat ping to keep the board alive
@@ -205,9 +223,10 @@ void main(void) {
     	case ACTIVEMODE :
     		//Heartbeat code
 
-    		if ( heartbeat_cnt > 1 )	//Allow for 1 count of jitter
+    		if ( heartbeat_TO > 0 && heartbeat_cnt > heartbeat_TO )
     		{
     			proc_mode = SHUTDOWN;	//sleep the sensor
+        		heartbeat_cnt = 0;
     		}
     		break;
 

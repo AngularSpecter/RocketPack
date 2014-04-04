@@ -1,13 +1,13 @@
 #include "timing.h"
-
+#include "UART.h"
 
 //TB1 and TB2 pins are completely used by alternate modules and should be used first for internal timing
 
 
 /*** Delay Timer *****************************************************************/
-inline void init_delay(void)
+void init_delay(void)
 {
-	//Set timer B0 to 32kHz aclk (crystal) and set in 16 bit mode
+	//Set timer B0 to 32kHz aclk and set in 16 bit mode
 	TB1CTL = TBCLR | TBSSEL_ACLK | CNTL_16;
 }
 
@@ -31,6 +31,7 @@ void delay_cancel(void)
 }
 
 
+
 //CCR interrupt
 #pragma vector=TIMER1_B0_VECTOR
 __interrupt void TIMER1_B0_ISR(void)
@@ -45,6 +46,37 @@ __interrupt void TIMER1_B1_ISR(void)
 {
 	LPM0_EXIT;
 	delay_cancel();
+}
+
+
+
+
+void hs_interval_start(uint16 ticks)
+{
+	TB2CTL = TBCLR | TBSSEL_ACLK | CNTL_16;
+	TB2CCTL0 = CCIE;
+	TB2CCR0  = ticks;
+	TB2CTL  |= MC__UP;
+}
+
+void hs_interval_stop(void)
+{
+	TB2CCTL0 &= ~CCIE;
+	TB2CTL   &= ~0x18;
+}
+
+//CCR interrupt
+#pragma vector=TIMER2_B0_VECTOR
+__interrupt void TIMER2_B0_ISR(void)
+{
+	db_send_byte(0x0F);
+}
+
+//Timer overflow interrupt
+#pragma vector=TIMER2_B1_VECTOR
+__interrupt void TIMER2_B1_ISR(void)
+{
+	db_send_byte(0x0F);
 }
 
 

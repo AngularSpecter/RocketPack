@@ -30,15 +30,14 @@ void init_radio_UART(void)
     // Configure UART 0
     UCA0CTLW0 = UCSWRST;				   // Put UART in reset (off) mode
 
-    //UCA0CTLW0 |= 0x0040;				   // Use ACLK;  8n1 implied as default setting
-    //UCA0BRW    = 0x0003;                   // 9600 baud
-    //UCA0MCTLW |= 0x9200;                   // UCBRSx value = 0x92 (See UG)
-
-
-   // UCOS16 = 1; UCBR0 = 130;  UCBRF0 = 3; UCBRS0 = 0x25
     UCA0CTLW0 |= 0x00C0;				   // Use SMCLK;  8n1 implied as default setting
     UCA0BRW    = 130;
     UCA0MCTLW = 1 | 0x0030 | 0x2500;
+
+    //19200 Baud
+   // UCA0CTLW0 |= 0x00C0;				   // Use SMCLK;  8n1 implied as default setting
+   // UCA0BRW    = 65;
+   // UCA0MCTLW = 1 | 0x0010 | 0xD600;
 
 
     UCA0CTL1 &= ~UCSWRST;                  // release from reset
@@ -99,7 +98,7 @@ UARTERROR radio_wait(uint16 timeout)
 	return NOERROR;
 }
 
-
+char byte;
 
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0_ISR(void)
@@ -109,7 +108,9 @@ __interrupt void USCI_A0_ISR(void)
   case 0:							// Vector 0 - no interrupt
 	  break;
   case 2:                           // Vector 2 - RXIFG
-	    RADIORXERROR = buffer_push(UCA0RXBUF, &radio_rx_buffer);
+	    byte = UCA0RXBUF;
+	    RADIORXERROR = buffer_push(byte, &radio_rx_buffer);
+	    //radio_send_byte(byte);
 	    if (radio_rx_buffer.packets_rxd) LPM0_EXIT;
 	  break;
   case 4:    						// Vector 4 - TXIFG
@@ -165,7 +166,7 @@ UARTERROR db_send_byte(unsigned char byte)
 
 
 
-
+char db_byte;
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1_ISR(void)
 {
@@ -174,7 +175,9 @@ __interrupt void USCI_A1_ISR(void)
   case 0:							// Vector 0 - no interrupt
 	  break;
   case 2:                           // Vector 2 - RXIFG
-	    dbRXERROR = buffer_push(UCA1RXBUF, &db_rx_buffer);
+	    db_byte = UCA1RXBUF;
+	    dbRXERROR = buffer_push(db_byte, &db_rx_buffer);
+	    //radio_send_byte(db_byte);
 	    if (db_rx_buffer.packets_rxd) LPM0_EXIT;
 	  break;
   case 4:    						// Vector 4 - TXIFG
