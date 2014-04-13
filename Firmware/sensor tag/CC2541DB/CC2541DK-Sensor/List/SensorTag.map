@@ -2,7 +2,7 @@
 #                                                                              #
 #      IAR Universal Linker V5.7.0.39                                          #
 #                                                                              #
-#           Link time     =  23/Mar/2014  19:17:12                             #
+#           Link time     =  06/Apr/2014  11:10:22                             #
 #           Target CPU    =  x51                                               #
 #           List file     =  "D:\Code\GitHub\RocketPack\Firmware\sensor tag\CC #
 #                            2541DB\CC2541DK-Sensor\List\SensorTag.map"        #
@@ -454,7 +454,7 @@ XDATA_I
            RXin                    000002A4 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000980 - 00000B42 (0x1c3 bytes), align: 0
+  Relative segment, address: CODE 00000980 - 00000B6E (0x1ef bytes), align: 0
   Segment part 27.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
@@ -523,38 +523,38 @@ XDATA_Z
            i2cAddr                 00000282 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000CEE - 00000D3C (0x4f bytes), align: 0
+  Relative segment, address: CODE 00000D1A - 00000D68 (0x4f bytes), align: 0
   Segment part 7.             Intra module refs:   i2cMstStrt::?relay
            LOCAL                   ADDRESS         
            =====                   =======         
-           i2cMstStrt              00000CEE 
+           i2cMstStrt              00000D1A 
                XSTACK = 0000000A ( 00000000 )
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000D3D - 00000D6E (0x32 bytes), align: 0
+  Relative segment, address: CODE 00000D69 - 00000D9A (0x32 bytes), align: 0
   Segment part 9.             Intra module refs:   HalI2CInit::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CInit              00000D3D 
+           HalI2CInit              00000D69 
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000D6F - 00000E00 (0x92 bytes), align: 0
+  Relative segment, address: CODE 00000D9B - 00000E2C (0x92 bytes), align: 0
   Segment part 11.            Intra module refs:   HalI2CRead::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CRead              00000D6F 
+           HalI2CRead              00000D9B 
                calls direct
                XSTACK = 00000000 ( 0000000A )
                ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000E01 - 00000E7C (0x7c bytes), align: 0
+  Relative segment, address: CODE 00000E2D - 00000EA8 (0x7c bytes), align: 0
   Segment part 13.            Intra module refs:   HalI2CWrite::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalI2CWrite             00000E01 
+           HalI2CWrite             00000E2D 
                calls direct
                XSTACK = 00000000 ( 00000009 )
     -------------------------------------------------------------------------
@@ -621,21 +621,21 @@ XDATA_Z
            buffer                  00000283 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000E7D - 00000ECB (0x4f bytes), align: 0
+  Relative segment, address: CODE 00000EA9 - 00000EF7 (0x4f bytes), align: 0
   Segment part 9.             Intra module refs:   HalSensorReadReg::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalSensorReadReg        00000E7D 
+           HalSensorReadReg        00000EA9 
                calls direct
                XSTACK = 00000000 ( 0000000B )
                ISTACK = 00000000 ( 00000001 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000ECC - 00000F53 (0x88 bytes), align: 0
+  Relative segment, address: CODE 00000EF8 - 00000F7F (0x88 bytes), align: 0
   Segment part 11.            Intra module refs:   HalSensorWriteReg::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           HalSensorWriteReg       00000ECC 
+           HalSensorWriteReg       00000EF8 
                calls direct
                XSTACK = 00000000 ( 0000000D )
                ISTACK = 00000000 ( 00000001 )
@@ -1181,36 +1181,36 @@ XDATA_I
            BAUD_RATE               000002A5 
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000B43 - 00000B9D (0x5b bytes), align: 0
+  Relative segment, address: CODE 00000B6F - 00000BC9 (0x5b bytes), align: 0
   Segment part 18.            Intra module refs:   UART_init::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           UART_init               00000B43 
+           UART_init               00000B6F 
                calls direct
                XSTACK = 00000000 ( 0000000E )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000B9E - 00000CB1 (0x114 bytes), align: 0
+  Relative segment, address: CODE 00000BCA - 00000CDD (0x114 bytes), align: 0
   Segment part 20.            Intra module refs:   calcBAUD::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           calcBAUD                00000B9E 
+           calcBAUD                00000BCA 
                XSTACK = 0000000E ( 0000000A )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000CB2 - 00000CD5 (0x24 bytes), align: 0
+  Relative segment, address: CODE 00000CDE - 00000D01 (0x24 bytes), align: 0
   Segment part 26.            Intra module refs:   flush_data::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           flush_data              00000CB2 
+           flush_data              00000CDE 
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
 <BANKED_CODE> 1 (was BANKED_CODE)
-  Relative segment, address: CODE 00000CD6 - 00000CED (0x18 bytes), align: 0
+  Relative segment, address: CODE 00000D02 - 00000D19 (0x18 bytes), align: 0
   Segment part 28.            Intra module refs:   flush_byte::?relay
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           flush_byte              00000CD6 
+           flush_byte              00000D02 
                XSTACK = 0000000A ( 00000000 )
                ISTACK = 00000000 ( 00000002 )
     -------------------------------------------------------------------------
@@ -1822,7 +1822,7 @@ Module                    CODE      DATA      XDATA  IDATA    BIT
 ?cmain                      76
 CSTARTUP                    18
   + common                   3
-SensorTag_Main             496             6      2
+SensorTag_Main             540             6      2
   + shared                  46             8
   + common
 VIRTUAL_REGISTERS                   7                           8
@@ -1834,7 +1834,7 @@ uart                       453             5      2
 N/A (command line)                 16           640    192
 N/A (alignment)
 ----------               -----     --     --    ---    ---      -
-Total:                   3 878     23     25    678    192      8
+Total:                   3 922     23     25    678    192      8
   + common                  46
 
 
@@ -1861,7 +1861,7 @@ RCODE                CODE          00000172 - 00000370         1FF   rel    0
 CODE_N               CODE               00000371                     dse    0
 DIFUNCT              CODE               00000371                     dse    0
 NEAR_CODE            CODE          00000371 - 0000039C          2C   rel    0
-<BANKED_CODE> 1      CODE          0000039D - 00000F53         BB7   rel    0
+<BANKED_CODE> 1      CODE          0000039D - 00000F7F         BE3   rel    0
 REGISTERS            DATA          00000000 - 00000007           8   rel    0
 VREG                 DATA          00000008 - 00000014           D   rel    0
 PSP                  DATA               00000015                     dse    0
@@ -1893,7 +1893,7 @@ ISTACK               IDATA         00000040 - 000000FF          C0   rel    0
                 *                                      *
                 ****************************************
 
- 3 924 bytes of CODE  memory
+ 3 968 bytes of CODE  memory
     23 bytes of DATA  memory (+ 25 absolute )
    678 bytes of XDATA memory
    192 bytes of IDATA memory

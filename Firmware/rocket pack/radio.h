@@ -28,7 +28,7 @@ HOSTDISC   :   [HOSTDISC] [0x00]
 #define NSEL       0x05   //base -> node: address of node to be active..all other sleep
 #define RADIOACK   0x06   //command ACK
 #define RADIONACK  0x07   //command NACK
-
+#define RADIOBOOT  0x08
 
 extern volatile unsigned int radio_command_mode;
 

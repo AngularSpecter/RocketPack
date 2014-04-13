@@ -1,8 +1,8 @@
 #include "timing.h"
 #include "UART.h"
+#include "types.h"
 
 //TB1 and TB2 pins are completely used by alternate modules and should be used first for internal timing
-
 
 /*** Delay Timer *****************************************************************/
 void init_delay(void)
@@ -69,7 +69,7 @@ void hs_interval_stop(void)
 #pragma vector=TIMER2_B0_VECTOR
 __interrupt void TIMER2_B0_ISR(void)
 {
-	db_send_byte(0x0F);
+	db_send_byte(sensorMask & ~0x20);
 }
 
 //Timer overflow interrupt

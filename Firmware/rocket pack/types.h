@@ -12,6 +12,8 @@
 #define TRUE    (uint8)1
 #define FALSE   (uint8)0
 
+extern volatile unsigned int sensorMask;
+
 typedef enum {
 	SLEEPWAIT,
 	PRESTAGE,

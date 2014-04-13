@@ -20,7 +20,8 @@
   // 0 -> 3  :  Sensors
   //   4     :  Baro calibration data
   //   5     :  Auto poll (1 = auto poll, 0 = ping to poll)
-
+  //   6     :  High speed mode (1 = decrease pressure sample rate)
+  //   7     :  <reserved> Used in main board to trigger board centric autopoll
  
 
    //start up with all sensors sleeping
@@ -80,6 +81,10 @@ void main(void)
         flush_data(&flag);
         baro_read_cal();
         
+        //End of line char
+        flag = 0x00;
+        flush_byte(&flag);
+        
       } else if ( active_sensors > 0 ) {
        
      //  P0_4 = 1;
@@ -126,53 +131,56 @@ void main(void)
     /*---------------------------------------------------------------------*/
     //Barometer
     
-    //uint16 delay_ticks = 0xFA00;
+    //uint16 delay_ticks;
     uint8 baro_res = 2;
     
     
     if ( active_sensors & BV(2) )
     {
-       //start_baro();
-       //while(delay_ticks--);
-      
        IDbyte = BV(2);
        flush_data(&IDbyte);
        
-       uint8 nullbyte = 3;
-       switch (baro_stage)
+       if (active_sensors & 0x40)
        {
-       case 1 :
-          baro_capture_press(baro_res);
-          baro_read_press(FALSE);
-          baro_read_temp(FALSE);
-          baro_stage++;
-          break;
-       case 2 :
-          baro_read_press(TRUE);
-          baro_read_temp(FALSE);
-          baro_stage++;
-          break;
-       case 3 :
-          baro_capture_temp();
-          baro_read_press(FALSE);
-          baro_read_temp(FALSE);
-          baro_stage++;
-          break;
-       case 4 :
-         baro_read_press(FALSE);
-         baro_read_temp(TRUE);
-         baro_stage = 1;
-         break;
+         //delay_ticks = 0xFA00;
+         baro_capture_press(baro_res);
+         //while(delay_ticks--);
+         baro_read_press(TRUE);
+         
+         //delay_ticks = 0xFA00;         
+         baro_capture_temp();
+         //while(delay_ticks--);
+         baro_read_temp(TRUE); 
+       }else{
+      
+         uint8 nullbyte = 3;
+         switch (baro_stage)
+         {
+         case 1 :
+            baro_capture_press(baro_res);
+            baro_read_press(FALSE);
+            baro_read_temp(FALSE);
+            baro_stage++;
+            break;
+         case 2 :
+            baro_read_press(TRUE);
+            baro_read_temp(FALSE);
+            baro_stage++;
+            break;
+         case 3 :
+            baro_capture_temp();
+            baro_read_press(FALSE);
+            baro_read_temp(FALSE);
+            baro_stage++;
+            break;
+         case 4 :
+           baro_read_press(FALSE);
+           baro_read_temp(TRUE);
+           baro_stage = 1;
+           break;
+         }
        }
-       /**
-       delay_ticks = baro_capture_press(baro_res);
-       while(delay_ticks--);
-       baro_read_press();
 
-       delay_ticks = baro_capture_temp();
-       while(delay_ticks--);
-       baro_read_temp();
-       **/
       //baro_shutdown();
     }
     
@@ -189,12 +197,13 @@ void main(void)
     
     /*---------------------------------------------------------------------*/
 
-    }
     
     //End of line char
     flag = 0x00;
     flush_byte(&flag);
     
+    }
+       
 
     if ( !(active_sensors & BV(5)) )        //if autopoll is off
     {

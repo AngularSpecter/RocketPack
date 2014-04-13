@@ -7,17 +7,17 @@
 #include "timing.h"
 
 volatile unsigned char dbRXflag      = 0;
-         uint16        radioAddress  = 0xff;
-   const unsigned int  magTrigger    = 0;
-         unsigned int  sensorMask    = 0;
-     static const int  mag_poll_cnt  = 1;
-
-     unsigned char     heartbeat_TO  = 0;
-
+uint16                 radioAddress  = 0xff;
+const unsigned int     magTrigger    = 0;
+static const int       mag_poll_cnt  = 1;
+unsigned char          heartbeat_TO  = 0;
+volatile unsigned int  sensorMask    = 0;
 
 void main(void) {
 
 	uint16 poll_rate = 1100;
+
+
 
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
@@ -54,6 +54,7 @@ void main(void) {
 
     _enable_interrupts();
 
+    sleep_radio(FALSE);
     uint8 success = 0;
 
     /* Read the current address from the radio */
@@ -76,9 +77,10 @@ void main(void) {
 
 	 flush_buffer(&radio_rx_buffer);      //flush the command buffer
 
-
-
-
+	 //broadcast that we
+	 radio_send_byte(RADIOBOOT);
+	 radio_send_byte(radioAddress);
+	 radio_send_byte(0x00);
 
 	 /** Operating modes  *********************************
 	  *
@@ -146,17 +148,40 @@ void main(void) {
     		//A data packet updates the sensor data mask (including autopoll mode)
     		if (packet[0] == DATA &&  proc_mode == ACTIVEMODE )
     		{
-    			sensorMask = packet[1];
+
     			heartbeat_TO = packet[2];
     			heartbeat_cnt = 0;
     			//db_send_byte( sensorMask );
 
-    			if ( packet[1] & 0x20 )
+    			//if auto poll was previously active, but isn't now
+    			if ( (sensorMask & 0x20) && !(packet[1] & 0x20) )
     			{
-    				hs_interval_start(poll_rate);
-    			}else{
     				hs_interval_stop();
     			}
+
+
+    			sensorMask = packet[1];  //turn off the autopoll flags (we will handle it ourselves)
+
+
+    			//if the auto poll bit is set
+				if ( sensorMask & 0x20 )
+				{
+					//since we handle polling here, don't pass the autopoll flag to the sensors
+					hs_interval_start(poll_rate);
+
+				}else if ( sensorMask & 0x80 )
+				{
+					//0x80 lets us pass on autopoll to the sensors... this is a 'max rate' operation
+					hs_interval_stop();                   //just in case
+				    db_send_byte( sensorMask | 0x20 );    //pass on the autopoll flag to the sensors
+				}else
+    			{
+					//else we are just requesting a single frame
+    				db_send_byte( sensorMask & 0x4F );
+    			}
+
+
+
 
     		}
 

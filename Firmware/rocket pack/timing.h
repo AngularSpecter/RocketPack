@@ -16,6 +16,7 @@
 #define TBSSEL_SMCLK     TBSSEL_2    /* Clock Source: SMCLK */
 #define TBSSEL_INCLK     TBSSEL_3    /* Clock Source: INCLK */
 
+
 void init_delay(void);
 void delay(uint16 ticks);
 void delay_cancel(void);
