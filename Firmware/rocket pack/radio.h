@@ -4,6 +4,29 @@
 #include <msp430FR5739.h>
 #include "types.h"
 
+/*  5 --- reset radio --- P3.7
+ *     Re-boot module.(minimum pulse is 90us) Open Drain configuration.
+ *     Module will drive reset line low momentarily on reboot and power up
+ *
+ *  9 --- sleep radio --- P3.5
+ *     By default, DI3 pin is not used. To configure this pin to support
+       Sleep Modes, refer to the Sleep Mode, SM Command and PW Command sections.
+
+ *  13 -- status radio -- P3.4
+ *      high = Indicates power is on and module is not in Sleep Mode.
+ *      Low = Sleep mode or module is unpowered
+ *
+ *
+ *  Rev 1 board
+ *  6 -- config radio -- P3.6
+ * 		  Hold high during power up to enter command mode
+ *
+ *  Rev 2 board
+ *  16 -- config radio -- P3.6
+ * 		  Pull high to enter binary config mode
+ * 		  also RTS for hardware flow control
+ */
+
 
 #define STATUS  BIT4
 #define SLEEP   BIT5
